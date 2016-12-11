@@ -100,9 +100,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Intent iCupon = new Intent(this, NewCuponActivity.class);
                     startActivity(iCupon);
                     break;
-                case 3:
+                case 3: //nuevo pedido
                     Intent iOrder = new Intent(this, NewOrderActivity.class);
                     startActivity(iOrder);
+                    break;
+                case 4: //productos
+                    //loadproducts(); //no se usó porque estaba más lenta la intefaz
+                    Intent iProduct = new Intent(MainActivity.this, ProductActivity.class);
+                    startActivity(iProduct);
                     break;
                 case 5:
                     loadSales();

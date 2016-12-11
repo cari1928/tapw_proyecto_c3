@@ -20,9 +20,7 @@ public class CategoryActivity extends AppCompatActivity {
 
     String jsonResult;
     public static String url = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/products/categories";
-    public static String consumer_key    = "ck_a645f61ead6c17186e280ae58d547031078b345b";
-    public static String consumer_secret = "cs_8097a58db4fed33c44437a1296963663398b711d";
-    List<Category> items   = new ArrayList<Category>();
+    List<Category> items = new ArrayList<Category>();
     CategoryAdapter cAdapter;
     ListView list;
 
@@ -44,10 +42,10 @@ public class CategoryActivity extends AppCompatActivity {
                 ListCategories();
             }
         });
-        tarea.execute(new String[] { url });
+        tarea.execute(new String[]{url});
     }
 
-    public void ListCategories(){
+    public void ListCategories() {
         try {
             JSONObject jsonResponse = new JSONObject(jsonResult);
             JSONArray jsonMainNode = jsonResponse.optJSONArray("product_categories");
@@ -60,7 +58,7 @@ public class CategoryActivity extends AppCompatActivity {
                 String description = jsonChildNode.optString("description");
                 String image = jsonChildNode.optString("image");
 
-                items.add(new Category(id, name, description, image ));
+                items.add(new Category(id, name, description, image));
             }
         } catch (JSONException e) {
             e.printStackTrace();
