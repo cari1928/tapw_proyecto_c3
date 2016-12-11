@@ -44,11 +44,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static String url = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/customers";
     String auth_url = "https://tapw-proyecto-c3-cari1928.c9users.io/auth_users.php";
 
-    //public static String consumer_key    = "ck_a645f61ead6c17186e280ae58d547031078b345b";
-    //public static String consumer_secret = "cs_8097a58db4fed33c44437a1296963663398b711d";
-    //public static String url = "https://tapw-woocomerce-customers-cari1928.c9users.io/wc-api/v3/customers";
-    //String auth_url = "https://tapw-woocomerce-customers-cari1928.c9users.io/auth_users.php";
-
     String jsonResult, loginResult;
     Dialog dLogin;
     CustomerAdapter cAdapter;
@@ -95,6 +90,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case 2:
                     newCustomer();
+                    break;
+                case 3:
+                    Intent i = new Intent(this, NewOrderActivity.class);
+                    startActivity(i);
                     break;
                 case 6:
                     loadSales();
