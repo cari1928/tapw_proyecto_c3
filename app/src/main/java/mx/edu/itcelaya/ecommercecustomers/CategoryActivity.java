@@ -41,9 +41,6 @@ public class CategoryActivity extends AppCompatActivity {
             @Override
             public void setResponse(String output) {
                 jsonResult = output;
-
-                Toast.makeText(getApplicationContext(), jsonResult, Toast.LENGTH_LONG).show();
-
                 ListCategories();
             }
         });

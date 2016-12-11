@@ -26,7 +26,8 @@
         <activity android:name=".Grafica1Activity" />
         <activity android:name=".segunda_ventanaActivity" />
         <activity android:name=".CategoryActivity" />
-        <activity android:name=".NewOrderActivity"></activity>
+        <activity android:name=".NewOrderActivity" />
+        <activity android:name=".NewCuponActivity"></activity>
     </application>
 
 </manifest>

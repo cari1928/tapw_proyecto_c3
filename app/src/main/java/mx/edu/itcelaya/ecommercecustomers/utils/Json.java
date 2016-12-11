@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import mx.edu.itcelaya.ecommercecustomers.model.Cupon;
 import mx.edu.itcelaya.ecommercecustomers.model.Customer;
 
 /**
@@ -11,7 +12,7 @@ import mx.edu.itcelaya.ecommercecustomers.model.Customer;
  */
 public class Json {
 
-    public static String toJSon(Customer customer) {
+    public static String CustomerToJSON(Customer customer) {
         try {
             // Convert Java Object to JSON
             JSONObject jsonObj = new JSONObject();
@@ -59,6 +60,28 @@ public class Json {
             ex.printStackTrace();
         }
 
+        return null;
+    }
+
+    public static String CuponToJSON(Cupon cupon) {
+        try {
+            // Convert Java Object to JSON
+            JSONObject jsonObj = new JSONObject();
+
+            jsonObj.put("code", cupon.getCode());
+            jsonObj.put("type", cupon.getType());
+            jsonObj.put("amount", cupon.getAmount() + "");
+            jsonObj.put("individual_use", cupon.getIndividual_use() + "");
+            jsonObj.put("minimum_amount", cupon.getMin_amount());
+
+            JSONObject jsonCupon = new JSONObject();
+            jsonCupon.put("coupon", jsonObj);
+
+            return jsonCupon.toString();
+
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
         return null;
     }
 }

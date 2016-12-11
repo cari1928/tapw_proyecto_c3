@@ -19,6 +19,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import mx.edu.itcelaya.ecommercecustomers.MainActivity;
+import mx.edu.itcelaya.ecommercecustomers.model.Cupon;
 import mx.edu.itcelaya.ecommercecustomers.model.Customer;
 import mx.edu.itcelaya.ecommercecustomers.utils.Json;
 import mx.edu.itcelaya.ecommercecustomers.utils.Utils;
@@ -84,7 +85,7 @@ public class WooCommerceTask extends AsyncTask<String, Void, String> {
             switch (this.taskType) {
                 case GET_TASK:
                     jsonResult = inputStreamToString(Utils.OpenHttpConnection(params[0], true)).toString();
-                break;
+                    break;
                 case PUT_TASK:
                     jsonResult = inputStreamToString(OpenHttpConnectionCustomer(params[0], "PUT")).toString();
                     //jsonResult = "ok";
@@ -104,17 +105,17 @@ public class WooCommerceTask extends AsyncTask<String, Void, String> {
         return jsonResult;
     }
 
-    public InputStream OpenHttpConnectionCustomer(String urlString, String method )
-            throws IOException
-    {
+    public InputStream OpenHttpConnectionCustomer(String urlString, String method)
+            throws IOException {
         InputStream in = null;
         int response = -1;
         URL url = new URL(urlString);
         URLConnection conn = url.openConnection();
+        String json_customer;
 
         if (!(conn instanceof HttpURLConnection))
             throw new IOException("Not an HTTP connection");
-        try{
+        try {
             HttpURLConnection httpConn = (HttpURLConnection) conn;
             httpConn.setRequestMethod(method);
             httpConn.setRequestProperty("Content-Type", "application/json");
@@ -125,22 +126,25 @@ public class WooCommerceTask extends AsyncTask<String, Void, String> {
             httpConn.setRequestProperty("Authorization", "Basic " + base64EncodedCredentials);
 
 
-            if(method.equals("PUT") || method.equals("POST")) {
+            if (method.equals("PUT") || method.equals("POST")) {
                 httpConn.setDoInput(true);
                 httpConn.setDoOutput(true);
 
-                Customer customer = (Customer) this.obj;
-                String json_customer = Json.toJSon(customer);
+                if (processMessage.equals("Guardando Cupón...")) {
+                    Cupon cupon = (Cupon) this.obj;
+                    json_customer = Json.CuponToJSON(cupon);
+                } else {
+                    Customer customer = (Customer) this.obj;
+                    json_customer = Json.CustomerToJSON(customer);
+                }
 
                 OutputStream os = httpConn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
                 writer.write(json_customer);
                 writer.flush();
                 writer.close();
                 os.close();
             }
-
 
             httpConn.connect();
             response = httpConn.getResponseCode();
@@ -149,8 +153,7 @@ public class WooCommerceTask extends AsyncTask<String, Void, String> {
             } else {
                 System.out.println("Error code..." + response + httpConn.getResponseMessage());
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new IOException("Error connecting" + response + ex.getMessage());
         }
         return in;
@@ -166,9 +169,7 @@ public class WooCommerceTask extends AsyncTask<String, Void, String> {
             while ((rLine = rd.readLine()) != null) {
                 answer.append(rLine);
             }
-        }
-
-        catch (IOException e) {
+        } catch (IOException e) {
             // e.printStackTrace();
             Toast.makeText(contexto,
                     "Error..." + e.toString(), Toast.LENGTH_LONG).show();
