@@ -68,12 +68,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Toast.makeText(MainActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();
 
-        //mostrarLogin();
         loadProducts("https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/products");
-        //loadCustomers();
 
-        list = (ListView) findViewById(R.id.listCustomers);
-        list.setOnItemClickListener(listenerOrdenes);
+        list = (ListView) findViewById(R.id.listEcommerce);
+        list.setOnItemClickListener(listenerProducts);
         registerForContextMenu(list);
     }
 
@@ -159,8 +157,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             for (int i = 0; i < jsonMainNode.length(); i++) {
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
-                String name = jsonChildNode.optString("title");
                 Integer id_product = jsonChildNode.optInt("id");
+                String name = jsonChildNode.optString("title");
                 Double price = jsonChildNode.optDouble("price");
                 Integer stock_quantity = jsonChildNode.optInt("stock_quantity");
                 String ImageURL = jsonChildNode.optString("featured_src");
@@ -188,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void setResponse(String output) {
                 jsonResult = output;
 
-                Toast.makeText(MainActivity.this, jsonResult, Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, jsonResult, Toast.LENGTH_LONG).show();
 
                 Intent intent_grafica = new Intent(MainActivity.this, Grafica1Activity.class);
                 intent_grafica.putExtra("json", jsonResult);
@@ -203,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        if (v.getId() == R.id.listCustomers) {
+        if (v.getId() == R.id.listEcommerce) {
             menu.setHeaderTitle("Opciones");
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.customer_menu, menu);
@@ -298,8 +296,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Error" + e.toString(),
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Error" + e.toString(), Toast.LENGTH_LONG).show();
 
         }
 
@@ -307,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         list.setAdapter(cAdapter);
     }
 
-    AdapterView.OnItemClickListener listenerOrdenes = new AdapterView.OnItemClickListener() {
+    AdapterView.OnItemClickListener listenerProducts = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             //Toast.makeText(MainActivity.this, view.getTag() + "", Toast.LENGTH_LONG).show();
@@ -335,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             System.out.println("Error..." + e.getMessage());
         }
 
-        Toast.makeText(MainActivity.this, loginResult, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, loginResult, Toast.LENGTH_SHORT).show();
 
         //creación de web service propio
         try {
@@ -444,7 +441,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent i = new Intent(this, NewCustomerActivity.class);
         startActivity(i);
     }
-
 
     @Override
     protected void onRestart() {

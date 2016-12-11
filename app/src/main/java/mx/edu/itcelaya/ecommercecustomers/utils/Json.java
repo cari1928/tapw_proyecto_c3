@@ -25,12 +25,12 @@ public class Json {
             jsonBillingAddress.put("first_name", customer.getBilling_address().getFirst_name());
             jsonBillingAddress.put("last_name", customer.getBilling_address().getLast_name());
             jsonBillingAddress.put("company", "");
-            jsonBillingAddress.put("address_1", "969 Market");
+            jsonBillingAddress.put("address_1", customer.getBilling_address().getAddress_1());
             jsonBillingAddress.put("address_2", "");
-            jsonBillingAddress.put("city", "San Francisco");
-            jsonBillingAddress.put("state", "CA");
-            jsonBillingAddress.put("postcode", "94103");
-            jsonBillingAddress.put("country", "US");
+            jsonBillingAddress.put("city", customer.getBilling_address().getCity());
+            jsonBillingAddress.put("state", customer.getBilling_address().getState());
+            jsonBillingAddress.put("postcode", customer.getBilling_address().getPostcode());
+            jsonBillingAddress.put("country", customer.getBilling_address().getCountry());
             jsonBillingAddress.put("email", customer.getEmail());
             jsonBillingAddress.put("phone", "(555) 555-5555");
 
@@ -41,15 +41,14 @@ public class Json {
             jsonShippingAddress.put("first_name", customer.getShipping_address().getFirst_name());
             jsonShippingAddress.put("last_name", customer.getShipping_address().getLast_name());
             jsonShippingAddress.put("company", "");
-            jsonShippingAddress.put("address_1", "969 Market");
+            jsonShippingAddress.put("address_1", customer.getShipping_address().getAddress_1());
             jsonShippingAddress.put("address_2", "");
-            jsonShippingAddress.put("city", "San Francisco");
-            jsonShippingAddress.put("state", "CA");
-            jsonShippingAddress.put("postcode", "94103");
-            jsonShippingAddress.put("country", "US");
+            jsonShippingAddress.put("city", customer.getShipping_address().getCity());
+            jsonShippingAddress.put("state", customer.getShipping_address().getState());
+            jsonShippingAddress.put("postcode", customer.getShipping_address().getPostcode());
+            jsonShippingAddress.put("country", customer.getShipping_address().getCountry());
 
             jsonObj.put("shipping_address", jsonShippingAddress);
-
 
             JSONObject jsonCustomer = new JSONObject();
             jsonCustomer.put("customer", jsonObj);

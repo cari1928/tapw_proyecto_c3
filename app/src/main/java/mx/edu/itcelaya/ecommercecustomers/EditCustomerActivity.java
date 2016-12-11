@@ -25,7 +25,7 @@ public class EditCustomerActivity extends Activity implements View.OnClickListen
 
     String jsonResult;
     int idCustomer;
-    EditText txtNombres, txtApellidos, txtEmail;
+    EditText txtNombres, txtApellidos, txtEmail, txtAddress, txtCity, txtState, txtPostcode, txtCountry;
     Button btnEnviar, btnCancelar;
     Customer customer;
 
@@ -34,15 +34,19 @@ public class EditCustomerActivity extends Activity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_customer);
 
-
         txtNombres   = (EditText) findViewById(R.id.txtNombres);
         txtApellidos = (EditText) findViewById(R.id.txtApellidos);
         txtEmail     = (EditText) findViewById(R.id.txtEmail);
+        txtAddress     = (EditText) findViewById(R.id.txtAddress);
+        txtCity     = (EditText) findViewById(R.id.txtCity);
+        txtState     = (EditText) findViewById(R.id.txtState);
+        txtPostcode     = (EditText) findViewById(R.id.txtPostcode);
+        txtCountry     = (EditText) findViewById(R.id.txtCountry);
+
         btnEnviar    = (Button) findViewById(R.id.btnEnviar);
         btnCancelar  = (Button) findViewById(R.id.btnCancelar);
         btnEnviar.setOnClickListener(this);
         btnCancelar.setOnClickListener(this);
-
 
         Intent i = getIntent();
         idCustomer = i.getIntExtra("idCustomer", 0);
@@ -60,19 +64,6 @@ public class EditCustomerActivity extends Activity implements View.OnClickListen
         });
 
         tarea.execute(new String[] { MainActivity.url + "/" + idCustomer });
-
-        /*try {
-            jsonResult = tarea.execute(new String[] { MainActivity.url + "/" + idCustomer }).get();
-        } catch (InterruptedException e) {
-            //e.printStackTrace();
-            System.out.println(e.getMessage());
-        } catch (ExecutionException e) {
-            //e.printStackTrace();
-            System.out.println(e.getMessage());
-        }*/
-        //Toast.makeText(EditCustomerActivity.this, jsonResult, Toast.LENGTH_SHORT).show();
-
-
     }
 
     private void loadCustomerInForm() {
@@ -83,9 +74,17 @@ public class EditCustomerActivity extends Activity implements View.OnClickListen
             JSONObject jsonChildNode = jsonResponse.getJSONObject("customer");
 
             JSONObject jsonChildNodeBillingAddress = jsonChildNode.getJSONObject("billing_address");
-            Address billingAddress = new Address(jsonChildNodeBillingAddress.getString("first_name"), jsonChildNodeBillingAddress.getString("last_name"));
+            String first_name = jsonChildNodeBillingAddress.getString("first_name");
+            String last_name = jsonChildNodeBillingAddress.getString("last_name");
+            String address_1 = jsonChildNodeBillingAddress.getString("address_1");
+            String city = jsonChildNodeBillingAddress.getString("city");
+            String state = jsonChildNodeBillingAddress.getString("state");
+            String postcode = jsonChildNodeBillingAddress.getString("postcode");
+            String country = jsonChildNodeBillingAddress.getString("country");
+            Address billingAddress = new Address(first_name, last_name, address_1, city, state, postcode, country);
+
             JSONObject jsonChildNodeShippingAddress = jsonChildNode.getJSONObject("shipping_address");
-            Address shippingAddress = new Address(jsonChildNodeShippingAddress.getString("first_name"), jsonChildNodeShippingAddress.getString("last_name"));
+            Address shippingAddress = new Address(first_name, last_name, address_1, city, state, postcode, country);
 
             customer =
                     new Customer(
@@ -99,17 +98,19 @@ public class EditCustomerActivity extends Activity implements View.OnClickListen
                     );
             //System.out.println("Nombres: " + jsonChildNode.getString("first_name"));
             //System.out.println("Apellidos: " + jsonChildNode.getString("last_name"));
-
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Error" + e.toString(),
-                    Toast.LENGTH_LONG).show();
-
+            Toast.makeText(getApplicationContext(), "Error" + e.toString(), Toast.LENGTH_LONG).show();
         }
 
         txtNombres.setText(customer.getFirst_name());
         txtApellidos.setText(customer.getLast_name());
         txtEmail.setText(customer.getEmail());
+        txtAddress.setText(customer.getBilling_address().getAddress_1());
+        txtCity.setText(customer.getBilling_address().getCity());
+        txtState.setText(customer.getBilling_address().getState());
+        txtPostcode.setText(customer.getBilling_address().getPostcode());
+        txtCountry.setText(customer.getBilling_address().getCountry());
     }
 
     @Override
@@ -136,15 +137,29 @@ public class EditCustomerActivity extends Activity implements View.OnClickListen
         customer.setFirst_name(txtNombres.getText().toString());
         customer.setLast_name(txtApellidos.getText().toString());
         customer.setEmail(txtEmail.getText().toString());
+
+        Address infoBilling = new Address(
+                txtNombres.getText().toString(),
+                txtApellidos.getText().toString(),
+                txtAddress.getText().toString(),
+                txtCity.getText().toString(),
+                txtState.getText().toString(),
+                txtPostcode.getText().toString(),
+                txtCountry.getText().toString());
+        customer.setBilling_address(infoBilling);
+
+        Address infoShipping = new Address(
+                txtNombres.getText().toString(),
+                txtApellidos.getText().toString(),
+                txtAddress.getText().toString(),
+                txtCity.getText().toString(),
+                txtState.getText().toString(),
+                txtPostcode.getText().toString(),
+                txtCountry.getText().toString());
+        customer.setShipping_address(infoShipping);
+
         tarea.setObject(customer);
 
         tarea.execute(new String[] { MainActivity.url + "/" + idCustomer });
-
-        //String json_customer = Json.toJSon(customer);
-        //Toast.makeText(EditCustomerActivity.this, json_customer, Toast.LENGTH_LONG).show();
-        //System.out.println(json_customer);
-
-
     }
-
 }

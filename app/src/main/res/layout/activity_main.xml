@@ -10,7 +10,7 @@
     tools:context="mx.edu.itcelaya.ecommercecustomers.MainActivity">
 
     <ListView
-        android:id="@+id/listCustomers"
+        android:id="@+id/listEcommerce"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/user" />

@@ -87,7 +87,8 @@ public class WooCommerceTask extends AsyncTask<String, Void, String> {
                 break;
                 case PUT_TASK:
                     jsonResult = inputStreamToString(OpenHttpConnectionCustomer(params[0], "PUT")).toString();
-                break;
+                    //jsonResult = "ok";
+                    break;
                 case POST_TASK:
                     jsonResult = inputStreamToString(OpenHttpConnectionCustomer(params[0], "POST")).toString();
                     //OpenHttpConnectionCustomer(params[0], "POST");
