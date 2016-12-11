@@ -16,20 +16,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
-            android:text="Nombre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
-        <TextView
             android:id="@+id/tvNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
         <TextView
-            android:text="E-Mail"
+            android:id="@+id/tvID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
         <TextView
             android:id="@+id/tvEmail"
             android:layout_width="match_parent"

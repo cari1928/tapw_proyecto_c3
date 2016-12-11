@@ -64,15 +64,16 @@ public class CustomerAdapter extends BaseAdapter {
             rowView = inflater.inflate(R.layout.list_customers, null);
         }
 
-        TextView tvNombre   = (TextView) rowView.findViewById(R.id.tvNombre);
-        TextView tvEmail  = (TextView) rowView.findViewById(R.id.tvEmail);
+        TextView tvNombre = (TextView) rowView.findViewById(R.id.tvNombre);
+        TextView tvID = (TextView) rowView.findViewById(R.id.tvID);
+        TextView tvEmail = (TextView) rowView.findViewById(R.id.tvEmail);
         img1 = (ImageView) rowView.findViewById(R.id.avatarCustomer);
 
         final Customer item = this.customers.get(position);
-        tvNombre.setText(item.getFirst_name() + " " + item.getLast_name() );
+        tvNombre.setText(item.getFirst_name() + " " + item.getLast_name());
+        tvID.setText("ID: " + item.getId());
         tvEmail.setText(item.getEmail());
         rowView.setTag(item.getId());
-        //String sUrl = item.getImageUrl();
 
         //se lee la imagen
         String sUrl = "https://www.gravatar.com/avatar/" + Utils.md5(item.getEmail().toLowerCase());
