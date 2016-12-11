@@ -1,7 +1,6 @@
 package mx.edu.itcelaya.ecommercecustomers;
 
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,22 +38,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ListView list;
     List<Customer> items   = new ArrayList<Customer>();
+
     public static String consumer_key    = "ck_8610d1b7c089c88b439f3d8102d56ad1ef23b12f";
     public static String consumer_secret = "cs_659b8deee047824dff82defb6354d47823b01fdb";
     public static String url = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/customers";
-    public static String role = "";
     String auth_url = "https://tapw-proyecto-c3-cari1928.c9users.io/auth_users.php";
+
+    //public static String consumer_key    = "ck_a645f61ead6c17186e280ae58d547031078b345b";
+    //public static String consumer_secret = "cs_8097a58db4fed33c44437a1296963663398b711d";
+    //public static String url = "https://tapw-woocomerce-customers-cari1928.c9users.io/wc-api/v3/customers";
+    //String auth_url = "https://tapw-woocomerce-customers-cari1928.c9users.io/auth_users.php";
+
     String jsonResult, loginResult;
     Dialog dLogin;
     CustomerAdapter cAdapter;
     Button btnAceptar, btnCancelar;
     EditText txtUsername, txtPassword;
 
+    //------------Menús Customer y Administrator------------
     Menu menu;
+    public static String role = "";
     private boolean isChangedStat = false;
-    private static final int MENUITEM = Menu.FIRST;
-    private static final int MENUITEM2 = 2;
-    private final int ID_MENU_EXIT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         list = (ListView) findViewById(R.id.listCustomers);
         list.setOnItemClickListener(listenerOrdenes);
         registerForContextMenu(list);
-
-        //loadCustomers();
     }
 
     @Override
@@ -87,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(role.equals("administrator")) {
             switch (id) {
+                case 1: //categorías
+                    //constructor(ventana de donde viene, ventana a donde va)
+                    Intent in = new Intent(MainActivity.this, CategoryActivity.class);
+                    startActivity(in);
+                    break;
                 case 2:
                     newCustomer();
                     break;
@@ -104,12 +110,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             bandera = super.onOptionsItemSelected(item);
         }
-
         return bandera;
     }
 
     public void loadSales() {
         String url_sales = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/reports/sales?filter[period]=week";
+        //String url_sales = "https://tapw-woocomerce-customers-cari1928.c9users.io/wc-api/v3/reports/sales?filter[period]=week";
 
         WooCommerceTask tarea = new WooCommerceTask(this, WooCommerceTask.GET_TASK, "Cargando Reporte...", new AsyncResponse() {
             @Override
@@ -188,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void loadCustomers() {
+        //https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/customers
         WooCommerceTask tarea = new WooCommerceTask(this, WooCommerceTask.GET_TASK, "Cargando Clientes...", new AsyncResponse() {
             @Override
             public void setResponse(String output) {
@@ -232,7 +239,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         cAdapter = new CustomerAdapter(this, items);
-
         list.setAdapter(cAdapter);
     }
 
@@ -245,8 +251,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
     };
-
-
 
     private void validaAcceso () {
         String username = txtUsername.getText().toString();
@@ -280,14 +284,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String rol = jsonChildNode.optString("rol");
                 String nombre_completo = jsonChildNode.optString("nombre_completo");
 
+                dLogin.dismiss();
                 if (valido == true && rol.equals("administrator")) {
-                    dLogin.dismiss();
                     loadCustomers();
                     tvNombre.setText(nombre_completo);
                     role = rol;
                     isChangedStat = false;
                 } else if(valido == true && rol.equals("customer")) {
-                    dLogin.dismiss();
                     tvNombre.setText(nombre_completo);
                     role = rol;
                     isChangedStat = true;

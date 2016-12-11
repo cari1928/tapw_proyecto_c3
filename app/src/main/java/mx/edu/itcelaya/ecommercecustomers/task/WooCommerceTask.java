@@ -58,7 +58,6 @@ public class WooCommerceTask extends AsyncTask<String, Void, String> {
         pDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pDlg.setCancelable(false);
         pDlg.show();
-
     }
 
     public void setObject(Object obj) {
