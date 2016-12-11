@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import mx.edu.itcelaya.ecommercecustomers.model.Category;
 import mx.edu.itcelaya.ecommercecustomers.task.AsyncResponse;
 import mx.edu.itcelaya.ecommercecustomers.task.WooCommerceTask;
 

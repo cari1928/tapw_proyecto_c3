@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 
 import mx.edu.itcelaya.ecommercecustomers.model.Address;
 import mx.edu.itcelaya.ecommercecustomers.model.Customer;
+import mx.edu.itcelaya.ecommercecustomers.model.Product;
 import mx.edu.itcelaya.ecommercecustomers.task.AsyncResponse;
 import mx.edu.itcelaya.ecommercecustomers.task.LoginTask;
 import mx.edu.itcelaya.ecommercecustomers.task.WooCommerceTask;
@@ -37,9 +38,11 @@ import mx.edu.itcelaya.ecommercecustomers.utils.NukeSSLCerts;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     ListView list;
-    List<Customer> items   = new ArrayList<Customer>();
+    List<Customer> customerItem = new ArrayList<Customer>();
+    List<Product> productItem = new ArrayList<Product>();
 
-    public static String consumer_key    = "ck_8610d1b7c089c88b439f3d8102d56ad1ef23b12f";
+
+    public static String consumer_key = "ck_8610d1b7c089c88b439f3d8102d56ad1ef23b12f";
     public static String consumer_secret = "cs_659b8deee047824dff82defb6354d47823b01fdb";
     public static String url = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/customers";
     String auth_url = "https://tapw-proyecto-c3-cari1928.c9users.io/auth_users.php";
@@ -47,13 +50,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String jsonResult, loginResult;
     Dialog dLogin;
     CustomerAdapter cAdapter;
+    ProductAdapter pAdapter;
     Button btnAceptar, btnCancelar;
     EditText txtUsername, txtPassword;
 
     //------------Menús Customer y Administrator------------
     Menu menu;
     public static String role = "";
-    private boolean isChangedStat = false;
+    //private boolean isChangedStat = false;
+    private int isChangedStat = 0; //0 = invitado, 1 = admin, 2 = customer
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +68,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Toast.makeText(MainActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();
 
-        mostrarLogin();
+        //mostrarLogin();
+        loadProducts("https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/products");
+        //loadCustomers();
+
         list = (ListView) findViewById(R.id.listCustomers);
         list.setOnItemClickListener(listenerOrdenes);
         registerForContextMenu(list);
@@ -71,7 +79,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;;
+        this.menu = menu;
+        ;
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
@@ -81,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
         Boolean bandera = true;
 
-        if(role.equals("administrator")) {
+        if (role.equals("administrator")) {
             switch (id) {
                 case 1: //categorías
                     //constructor(ventana de donde viene, ventana a donde va)
@@ -98,18 +107,76 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case 6:
                     loadSales();
                     break;
+                case 7:
+                    //desloguear
+                    break;
                 default:
                     bandera = super.onOptionsItemSelected(item);
             }
-        } else if(role.equals("customer")) {
+        } else if (role.equals("customer")) {
             switch (id) {
+                case 7:
+                    //desloguear
+                    break;
                 default:
                     bandera = super.onOptionsItemSelected(item);
             }
         } else {
+            switch (id) {
+                case 1:
+                    mostrarLogin();
+                    break;
+                case 2:
+                    Toast.makeText(MainActivity.this, "Carrito de compras", Toast.LENGTH_LONG).show();
+                    break;
+                case 3:
+                    Toast.makeText(MainActivity.this, "Checkout", Toast.LENGTH_LONG).show();
+                    break;
+            }
             bandera = super.onOptionsItemSelected(item);
         }
         return bandera;
+    }
+
+    public void loadProducts(String p_url) {
+        WooCommerceTask tarea = new WooCommerceTask(this, WooCommerceTask.GET_TASK, "Cargando Productos...", new AsyncResponse() {
+            @Override
+            public void setResponse(String output) {
+                jsonResult = output;
+
+                //Toast.makeText(getApplicationContext(), jsonResult, Toast.LENGTH_LONG).show();
+
+                ListProducts();
+            }
+        });
+        tarea.execute(new String[]{p_url});
+    }
+
+    public void ListProducts() {
+        try {
+            JSONObject jsonResponse = new JSONObject(jsonResult);
+            JSONArray jsonMainNode = jsonResponse.optJSONArray("products");
+
+            for (int i = 0; i < jsonMainNode.length(); i++) {
+                JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+                String name = jsonChildNode.optString("title");
+                Integer id_product = jsonChildNode.optInt("id");
+                Double price = jsonChildNode.optDouble("price");
+                Integer stock_quantity = jsonChildNode.optInt("stock_quantity");
+                String ImageURL = jsonChildNode.optString("featured_src");
+
+                if(stock_quantity < 0) {
+                    stock_quantity = 0;
+                }
+
+                productItem.add(new Product(id_product, name, price, stock_quantity, ImageURL));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Error" + e.toString(), Toast.LENGTH_LONG).show();
+        }
+        pAdapter = new ProductAdapter(this, productItem);
+        list.setAdapter(pAdapter);
     }
 
     public void loadSales() {
@@ -129,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        tarea.execute(new String[] { url_sales });
+        tarea.execute(new String[]{url_sales});
     }
 
     @Override
@@ -138,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (v.getId() == R.id.listCustomers) {
             menu.setHeaderTitle("Opciones");
-            MenuInflater inflater=getMenuInflater();
+            MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.customer_menu, menu);
         }
     }
@@ -149,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         Adapter adapter = list.getAdapter();
         //Object obj  = adapter.getItem(info.position);
-        Customer customer  = (Customer) adapter.getItem(info.position);
+        Customer customer = (Customer) adapter.getItem(info.position);
 
 
         switch (item.getItemId()) {
@@ -201,8 +268,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ListCustomers();
             }
         });
-        tarea.execute(new String[] { url });
-
+        tarea.execute(new String[]{url});
     }
 
     public void ListCustomers() {
@@ -219,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 JSONObject jsonChildNodeShippingAddress = jsonChildNode.getJSONObject("shipping_address");
                 Address shippingAddress = new Address(jsonChildNodeShippingAddress.getString("first_name"), jsonChildNodeShippingAddress.getString("last_name"));
 
-                items.add(
+                customerItem.add(
                         new Customer(
                                 jsonChildNode.optInt("id"),
                                 jsonChildNode.optString("email"),
@@ -237,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
-        cAdapter = new CustomerAdapter(this, items);
+        cAdapter = new CustomerAdapter(this, customerItem);
         list.setAdapter(cAdapter);
     }
 
@@ -251,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
-    private void validaAcceso () {
+    private void validaAcceso() {
         String username = txtUsername.getText().toString();
         String password = txtPassword.getText().toString();
         TextView tvNombre = (TextView) findViewById(R.id.user);
@@ -260,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tarea.setUsername(username);
         tarea.setPassword(password);
         try {
-            loginResult = tarea.execute(new String[] { auth_url }).get();
+            loginResult = tarea.execute(new String[]{auth_url}).get();
         } catch (InterruptedException e) {
             //e.printStackTrace();
             System.out.println("Error..." + e.getMessage());
@@ -288,11 +354,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     loadCustomers();
                     tvNombre.setText(nombre_completo);
                     role = rol;
-                    isChangedStat = false;
-                } else if(valido == true && rol.equals("customer")) {
+                    //isChangedStat = false;
+                    isChangedStat = 1;
+                } else if (valido == true && rol.equals("customer")) {
                     tvNombre.setText(nombre_completo);
                     role = rol;
-                    isChangedStat = true;
+                    //isChangedStat = true;
+                    isChangedStat = 2;
                 } else {
                     Toast.makeText(this, "" + "Usuario y/o contrase;a no validos", Toast.LENGTH_LONG).show();
                 }
@@ -307,17 +375,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        if(isChangedStat) { //customer
-            menu.add(0, 1, 0, "Datos Personales");
-            menu.add(0, 2, 0, "Nuevo Pedido");
-            menu.add(0, 3, 0, "Pedido");
-        } else { //administrator
-            menu.add(0, 1, 0, "Categorías");
-            menu.add(0, 2, 0, "Nuevo Cliente");
-            menu.add(0, 3, 0, "Nuevo Cupón");
-            menu.add(0, 4, 0, "Nuevo Pedido");
-            menu.add(0, 5, 0, "Productos");
-            menu.add(0, 6, 0, "Reporte de Ventas");
+
+        switch (isChangedStat) {
+            case 0:
+                menu.add(0, 1, 0, "Login");
+                menu.add(0, 2, 0, "Cart");
+                menu.add(0, 3, 0, "Checkout");
+                break;
+
+            case 1:
+                menu.add(0, 1, 0, "Categorías");
+                menu.add(0, 2, 0, "Nuevo Cliente");
+                menu.add(0, 3, 0, "Nuevo Cupón");
+                menu.add(0, 4, 0, "Nuevo Pedido");
+                menu.add(0, 5, 0, "Productos");
+                menu.add(0, 6, 0, "Reporte de Ventas");
+                menu.add(0, 7, 0, "Logout");
+                break;
+
+            case 2:
+                menu.add(0, 1, 0, "Datos Personales");
+                menu.add(0, 2, 0, "Nuevo Pedido");
+                menu.add(0, 3, 0, "Pedido");
+                menu.add(0, 4, 0, "Logout");
+                break;
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -337,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         onRestart();
                     }
                 });
-                tarea.execute(new String[] { MainActivity.url + "/" + idCustomer });
+                tarea.execute(new String[]{MainActivity.url + "/" + idCustomer});
 
             }
         });

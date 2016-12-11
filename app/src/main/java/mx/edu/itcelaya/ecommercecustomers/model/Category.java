@@ -1,4 +1,4 @@
-package mx.edu.itcelaya.ecommercecustomers;
+package mx.edu.itcelaya.ecommercecustomers.model;
 
 /**
  * Created by Radogan on 2016-12-10.

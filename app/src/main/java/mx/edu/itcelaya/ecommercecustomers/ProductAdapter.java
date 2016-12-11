@@ -1,5 +1,6 @@
 package mx.edu.itcelaya.ecommercecustomers;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,40 +10,48 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import mx.edu.itcelaya.ecommercecustomers.model.Category;
+import mx.edu.itcelaya.ecommercecustomers.model.Product;
+import mx.edu.itcelaya.ecommercecustomers.utils.Utils;
 
 /**
- * Created by Radogan on 2016-12-10.
+ * Created by Radogan on 2016-12-11.
  */
 
-public class CategoryAdapter extends BaseAdapter {
+public class ProductAdapter extends BaseAdapter {
     private Context context;
-    public List<Category> categories;
+    public List<Product> productos;
     ImageView img1;
 
-    public CategoryAdapter(Context context, List<Category> categories) {
+    public ProductAdapter(Context context, List<Product> productos) {
         this.context = context;
-        this.categories = categories;
+        this.productos = productos;
     }
 
     @Override
     public int getCount() {
-        return this.categories.size();
+        return this.productos.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return this.categories.get(i);
+        return this.productos.get(i);
     }
 
     @Override
@@ -55,21 +64,23 @@ public class CategoryAdapter extends BaseAdapter {
         View rowView = view;
         if (rowView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.list_categories, null);
+            rowView = inflater.inflate(R.layout.list_products, null);
         }
 
-        TextView tvNombre   = (TextView) rowView.findViewById(R.id.tvNombre);
-        TextView tvDescription = (TextView) rowView.findViewById(R.id.tvDescription);
-        img1 = (ImageView) rowView.findViewById(R.id.imgCategory);
+        TextView tvName = (TextView) rowView.findViewById(R.id.tvName);
+        TextView tvPrice = (TextView) rowView.findViewById(R.id.tvPrice);
+        TextView tvStockQuantity = (TextView) rowView.findViewById(R.id.tvStockQuantity);
+        img1 = (ImageView) rowView.findViewById(R.id.imgProduct);
 
-        final Category item = this.categories.get(i);
-        tvNombre.setText(item.getName());
-        tvDescription.setText(item.getDescription());
-        String sUrl = item.getImage();
+        final Product item = this.productos.get(i);
+        tvName.setText(item.getName());
+        tvPrice.setText("$" + item.getPrice());
+        tvStockQuantity.setText("In Stock: " + item.getQuantity());
+        String sUrl = item.getImageUrl();
         rowView.setTag(item.getId());
 
         try {
-            final Bitmap bitmap = new BackgroundTask().execute(sUrl).get();
+            final Bitmap bitmap = new ProductAdapter.BackgroundTask().execute(sUrl).get();
             img1.setImageBitmap(bitmap);
 
         } catch (InterruptedException e) {
@@ -81,15 +92,14 @@ public class CategoryAdapter extends BaseAdapter {
     }
 
     private InputStream OpenHttpConnection(String urlString)
-            throws IOException
-    {
+            throws IOException {
         InputStream in = null;
         int response = -1;
         URL url = new URL(urlString);
         URLConnection conn = url.openConnection();
         if (!(conn instanceof HttpURLConnection))
             throw new IOException("Not an HTTP connection");
-        try{
+        try {
             HttpURLConnection httpConn = (HttpURLConnection) conn;
             httpConn.setRequestMethod("GET");
 
@@ -98,14 +108,13 @@ public class CategoryAdapter extends BaseAdapter {
             if (response == HttpURLConnection.HTTP_OK) {
                 in = httpConn.getInputStream();
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new IOException("Error connecting" + response + ex.getMessage());
         }
         return in;
     }
 
-    private Bitmap DownloadImage(String URL)     {
+    private Bitmap DownloadImage(String URL) {
         Bitmap bitmap = null;
         InputStream in = null;
         try {

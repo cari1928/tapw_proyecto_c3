@@ -8,6 +8,7 @@ public class Product {
     String name;
     Double price;
     int quantity;
+    private String imageUrl;
 
     public Product(int id, String name, Double price, int quantity)
     {
@@ -15,6 +16,22 @@ public class Product {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+    }
+
+    public Product(int id, String name, Double price, int quantity, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public int getId() {
