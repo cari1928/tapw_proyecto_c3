@@ -1,12 +1,9 @@
 package mx.edu.itcelaya.ecommercecustomers;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,7 +20,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mx.edu.itcelaya.ecommercecustomers.model.Cupon;
 import mx.edu.itcelaya.ecommercecustomers.model.Report;
 import mx.edu.itcelaya.ecommercecustomers.task.AsyncResponse;
 import mx.edu.itcelaya.ecommercecustomers.task.WooCommerceTask;
@@ -85,8 +81,17 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btnReport:
                 //finish();
-                //Toast.makeText(ReportActivity.this, "Mostrar reporte", Toast.LENGTH_LONG).show();
-                loadReport("https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/reports/sales?filter[period]=day");
+                String time = spTime.getSelectedItem().toString();
+
+                if (!time.equals("Day")) {
+
+                    if (time.equals("Last Month")) {
+                        time = "last_month";
+                    }
+
+                    time = time.toLowerCase();
+                    loadReport("https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/reports/sales?filter[period]=" + time);
+                }
                 break;
         }
 
@@ -110,6 +115,10 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
 
     public void ListReport() {
         List<Report> rItems = new ArrayList<Report>();
+        List<String> lSales = new ArrayList<>();
+        List<Integer> lOrders = new ArrayList<>();
+        List<Integer> lItems = new ArrayList<>();
+        List<Integer> lCustumers = new ArrayList<>();
 
         try {
             JSONObject jsonResponse = new JSONObject(jsonResult);
@@ -121,28 +130,53 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
             Integer total_items = jsonChildNode.optInt("total_items");
             String total_tax = jsonChildNode.optString("total_tax");
 
-            rItems.add(new Report(total_sales, average_sales, total_orders, total_items, total_tax));
+            //JSONArray jsonLists = jsonChildNode.optJSONArray("totals");
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this); //recibe el contexto de la app
-            LinearLayout layout1 = new LinearLayout(this); //para colocar en él los elementos
-            layout1.setOrientation(LinearLayout.VERTICAL);
+            String prueba = jsonChildNode.optString("totals");
+            JSONObject jsonPrueba = jsonChildNode.optJSONObject("totals");
+            Toast.makeText(getApplicationContext(), prueba, Toast.LENGTH_LONG).show();
+            System.out.print(prueba);
 
-            //nuevo listview en conjunto con un arrayadapter
-            ListView vReports = new ListView(this);
-            vReports.setAdapter(new ReportAdapter(this, rItems));
+            //hasta aquí me quedé, continuar desde este punto!!!!
+            //            for (int i = 0; i < jsonLists.length(); i++) {
+//                JSONObject jsonInfo = jsonLists.optJSONObject(i);
+//
+//                String sales = jsonInfo.optString("sales");
+//                Integer orders = jsonInfo.optInt("orders");
+//                Integer items = jsonInfo.optInt("items");
+//                Integer customers = jsonInfo.optInt("customers");
+//
+//                lSales.add(sales);
+//                lOrders.add(orders);
+//                lItems.add(items);
+//                lCustumers.add(customers);
+//            }
 
-            //boton
-            btnRegresa = new Button(this);
-            btnRegresa.setText("Cerrar");
-            btnRegresa.setOnClickListener(this);
+//            rItems.add(new Report(
+//                    total_sales, average_sales, total_orders, total_items, total_tax, lSales, lOrders, lItems, lCustumers
+//            ));
+//
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this); //recibe el contexto de la app
+//            LinearLayout layout1 = new LinearLayout(this); //para colocar en él los elementos
+//            layout1.setOrientation(LinearLayout.VERTICAL);
+//
+//            //nuevo listview en conjunto con un arrayadapter
+//            ListView vReports = new ListView(this);
+//            vReports.setAdapter(new ReportAdapter(this, rItems));
+//
+//            //boton
+//            btnRegresa = new Button(this);
+//            btnRegresa.setText("Cerrar");
+//            btnRegresa.setOnClickListener(this);
+//
+//            //se pasan los elementos al layout
+//            layout1.addView(vReports);
+//            layout1.addView(btnRegresa);
+//
+//            builder.setView(layout1); //se le pasa el layout a builder
+//            dialogFoto = builder.create(); //se termina de crear el dialogo
+//            dialogFoto.show(); //se muestra el dialogo
 
-            //se pasan los elementos al layout
-            layout1.addView(vReports);
-            layout1.addView(btnRegresa);
-
-            builder.setView(layout1); //se le pasa el layout a builder
-            dialogFoto = builder.create(); //se termina de crear el dialogo
-            dialogFoto.show(); //se muestra el dialogo
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Error" + e.toString(), Toast.LENGTH_LONG).show();

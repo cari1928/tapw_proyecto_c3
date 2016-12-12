@@ -67,7 +67,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Toast.makeText(MainActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();
 
+        //importante para el funcionamiento normal!!!!!
         loadProducts("https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/products");
+
+        //------------porque el login falla, pero solo es temporal!!!!!
+        //loadCustomers();
+        //tvNombre.setText(nombre_completo);
+        //role = "administrator";
+        //isChangedStat = 1;
 
         list = (ListView) findViewById(R.id.listEcommerce);
         list.setOnItemClickListener(listenerProducts);

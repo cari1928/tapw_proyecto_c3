@@ -1,5 +1,7 @@
 package mx.edu.itcelaya.ecommercecustomers.model;
 
+import java.util.List;
+
 /**
  * Created by Radogan on 2016-12-11.
  */
@@ -11,8 +13,10 @@ public class Report {
     int total_items;
     String total_tax;
 
-    int total_customers;
-    Totals totals;
+    List<String> sales;
+    List<Integer> orders;
+    List<Integer> items;
+    List<Integer> costumers;
 
     public Report() {
     }
@@ -25,14 +29,16 @@ public class Report {
         this.total_tax = total_tax;
     }
 
-    public Report(String total_sales, String average_sales, int total_orders, int total_items, String total_tax, int total_customers, Totals totals) {
+    public Report(String total_sales, String average_sales, int total_orders, int total_items, String total_tax, List<String> sales, List<Integer> orders, List<Integer> items, List<Integer> costumers) {
         this.total_sales = total_sales;
         this.average_sales = average_sales;
         this.total_orders = total_orders;
         this.total_items = total_items;
         this.total_tax = total_tax;
-        this.total_customers = total_customers;
-        this.totals = totals;
+        this.sales = sales;
+        this.orders = orders;
+        this.items = items;
+        this.costumers = costumers;
     }
 
     public String getTotal_sales() {
@@ -75,19 +81,35 @@ public class Report {
         this.total_tax = total_tax;
     }
 
-    public int getTotal_customers() {
-        return total_customers;
+    public List<String> getSales() {
+        return sales;
     }
 
-    public void setTotal_customers(int total_customers) {
-        this.total_customers = total_customers;
+    public void setSales(List<String> sales) {
+        this.sales = sales;
     }
 
-    public Totals getTotals() {
-        return totals;
+    public List<Integer> getOrders() {
+        return orders;
     }
 
-    public void setTotals(Totals totals) {
-        this.totals = totals;
+    public void setOrders(List<Integer> orders) {
+        this.orders = orders;
+    }
+
+    public List<Integer> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Integer> items) {
+        this.items = items;
+    }
+
+    public List<Integer> getCostumers() {
+        return costumers;
+    }
+
+    public void setCostumers(List<Integer> costumers) {
+        this.costumers = costumers;
     }
 }

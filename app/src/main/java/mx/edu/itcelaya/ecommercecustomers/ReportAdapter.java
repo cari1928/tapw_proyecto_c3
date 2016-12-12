@@ -7,7 +7,9 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -15,10 +17,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import mx.edu.itcelaya.ecommercecustomers.model.Order;
 import mx.edu.itcelaya.ecommercecustomers.model.Product;
 import mx.edu.itcelaya.ecommercecustomers.model.Report;
+import mx.edu.itcelaya.ecommercecustomers.model.Totals;
 
 /**
  * Created by Radogan on 2016-12-11.
@@ -61,6 +67,10 @@ public class ReportAdapter extends BaseAdapter {
         TextView tvTotalOrders  = (TextView) rowView.findViewById(R.id.tvTotalOrders);
         TextView tvTotalProducts  = (TextView) rowView.findViewById(R.id.tvTotalProducts);
         TextView tvTotalTax  = (TextView) rowView.findViewById(R.id.tvTotalTax);
+        ListView lvSubtotal = (ListView) rowView.findViewById(R.id.lvSubtotal);
+//        ListView lvOrdenes = (ListView) rowView.findViewById(R.id.lvOrdenes);
+//        ListView lvProducts = (ListView) rowView.findViewById(R.id.lvProducts);
+//        ListView lvCustomers = (ListView) rowView.findViewById(R.id.lvCustomers);
 
         final Report item = this.reports.get(position);
 
@@ -70,6 +80,24 @@ public class ReportAdapter extends BaseAdapter {
         tvTotalProducts.setText(item.getTotal_items() + "");
         tvTotalTax.setText(item.getTotal_tax());
 
+        List<String> lSales = item.getSales();
+
+        //falta checar éstos
+//        List<Integer> lOrders = item.getOrders();
+//        List<Integer> lItems = item.getItems();
+//        List<Integer> lCustumers = item.getCostumers();
+
+        final ArrayList<String> list = new ArrayList<String>();
+        for (Iterator<String> iter = lSales.iterator(); iter.hasNext(); ) {
+            String element = iter.next();
+            list.add(element);
+        }
+
+        final ArrayAdapter adapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, list);
+        lvSubtotal.setAdapter(adapter);
+        rowView.setTag("Prueba");
+
         return rowView;
     }
+
 }
