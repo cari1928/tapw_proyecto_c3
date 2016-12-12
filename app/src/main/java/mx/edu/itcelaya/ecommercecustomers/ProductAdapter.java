@@ -68,12 +68,16 @@ public class ProductAdapter extends BaseAdapter {
         }
 
         TextView tvName = (TextView) rowView.findViewById(R.id.tvName);
+
+        TextView tvID = (TextView) rowView.findViewById(R.id.tvID);
+
         TextView tvPrice = (TextView) rowView.findViewById(R.id.tvPrice);
         TextView tvStockQuantity = (TextView) rowView.findViewById(R.id.tvStockQuantity);
         img1 = (ImageView) rowView.findViewById(R.id.imgProduct);
 
         final Product item = this.productos.get(i);
         tvName.setText(item.getName());
+        tvID.setText("ID: " + item.getId());
         tvPrice.setText("$" + item.getPrice());
         tvStockQuantity.setText("In Stock: " + item.getQuantity());
         String sUrl = item.getImageUrl();

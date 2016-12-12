@@ -83,7 +83,7 @@ public class NewCuponActivity extends AppCompatActivity implements View.OnClickL
 
         String tmpItemType = spType.getSelectedItem().toString();
         String tmpType = "";
-        switch (tmpItemType){
+        switch (tmpItemType) {
             case "Fixed Cart":
                 tmpType = "fixed_cart";
                 break;
@@ -100,7 +100,7 @@ public class NewCuponActivity extends AppCompatActivity implements View.OnClickL
 
         String tmpIndividualItem = spType.getSelectedItem().toString();
         String tmpIndividual = "";
-        switch (tmpIndividualItem){
+        switch (tmpIndividualItem) {
             case "Yes":
                 tmpIndividual = "true";
                 break;
@@ -117,6 +117,6 @@ public class NewCuponActivity extends AppCompatActivity implements View.OnClickL
 
         tarea.setObject(cupon);
 
-        tarea.execute(new String[]{ url });
+        tarea.execute(new String[]{url});
     }
 }

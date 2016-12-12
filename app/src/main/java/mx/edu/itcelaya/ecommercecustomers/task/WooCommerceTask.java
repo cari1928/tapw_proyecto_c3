@@ -21,6 +21,7 @@ import java.net.URLConnection;
 import mx.edu.itcelaya.ecommercecustomers.MainActivity;
 import mx.edu.itcelaya.ecommercecustomers.model.Cupon;
 import mx.edu.itcelaya.ecommercecustomers.model.Customer;
+import mx.edu.itcelaya.ecommercecustomers.model.Order;
 import mx.edu.itcelaya.ecommercecustomers.utils.Json;
 import mx.edu.itcelaya.ecommercecustomers.utils.Utils;
 
@@ -111,7 +112,7 @@ public class WooCommerceTask extends AsyncTask<String, Void, String> {
         int response = -1;
         URL url = new URL(urlString);
         URLConnection conn = url.openConnection();
-        String json_customer;
+        String tmp_json;
 
         if (!(conn instanceof HttpURLConnection))
             throw new IOException("Not an HTTP connection");
@@ -132,15 +133,18 @@ public class WooCommerceTask extends AsyncTask<String, Void, String> {
 
                 if (processMessage.equals("Guardando Cupón...")) {
                     Cupon cupon = (Cupon) this.obj;
-                    json_customer = Json.CuponToJSON(cupon);
+                    tmp_json = Json.CuponToJSON(cupon);
+                } else if(processMessage.equals("Guardando Orden...")){
+                    Order order = (Order) this.obj;
+                    tmp_json = Json.OrderToJSON(order);
                 } else {
                     Customer customer = (Customer) this.obj;
-                    json_customer = Json.CustomerToJSON(customer);
+                    tmp_json = Json.CustomerToJSON(customer);
                 }
 
                 OutputStream os = httpConn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                writer.write(json_customer);
+                writer.write(tmp_json);
                 writer.flush();
                 writer.close();
                 os.close();

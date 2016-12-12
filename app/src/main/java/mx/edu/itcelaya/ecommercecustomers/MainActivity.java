@@ -100,19 +100,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Intent iCupon = new Intent(this, NewCuponActivity.class);
                     startActivity(iCupon);
                     break;
-                case 3: //nuevo pedido
-                    Intent iOrder = new Intent(this, NewOrderActivity.class);
-                    startActivity(iOrder);
-                    break;
-                case 4: //productos
+                case 3: //productos
                     //loadproducts(); //no se usó porque estaba más lenta la intefaz
                     Intent iProduct = new Intent(MainActivity.this, ProductActivity.class);
                     startActivity(iProduct);
                     break;
-                case 5:
+                case 4:
                     loadSales();
                     break;
-                case 6:
+                case 5:
                     //desloguear
                     break;
                 default:
@@ -231,6 +227,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent iOrders = new Intent(this, CustomerOrdersActivity.class);
                 iOrders.putExtra("idCustomer", customer.getId());
                 startActivity(iOrders);
+                break;
+            
+            case R.id.mnuNewOrder:
+                Intent iNewOrder = new Intent(this, NewOrderActivity.class);
+                iNewOrder.putExtra("idCustomer", customer.getId());
+                startActivity(iNewOrder);
                 break;
         }
         return true;
@@ -388,10 +390,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 menu.add(0, 1, 0, "Categorías");
                 //menu.add(0, 2, 0, "Nuevo Cliente");
                 menu.add(0, 2, 0, "Nuevo Cupón");
-                menu.add(0, 3, 0, "Nuevo Pedido");
-                menu.add(0, 4, 0, "Productos");
-                menu.add(0, 5, 0, "Reporte de Ventas");
-                menu.add(0, 6, 0, "Logout");
+                //menu.add(0, 3, 0, "Nuevo Pedido");
+                menu.add(0, 3, 0, "Productos");
+                menu.add(0, 4, 0, "Reporte de Ventas");
+                menu.add(0, 5, 0, "Logout");
                 break;
 
             case 2:
@@ -455,6 +457,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //quizá sea necesario poner un if para que dependiendo de la variable onchanged y role muestre una lista en específico
         loadCustomers();
     }
-
-
 }

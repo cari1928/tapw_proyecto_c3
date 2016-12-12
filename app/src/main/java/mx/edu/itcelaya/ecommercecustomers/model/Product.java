@@ -18,6 +18,11 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public Product(int id, int quantity){
+        this.id = id;
+        this.quantity = quantity;
+    }
+
     public Product(int id, String name, Double price, int quantity, String imageUrl) {
         this.id = id;
         this.name = name;

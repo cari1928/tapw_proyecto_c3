@@ -11,29 +11,20 @@
     tools:context="mx.edu.itcelaya.ecommercecustomers.NewOrderActivity">
 
     <TableLayout
+        android:id="@+id/tableLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tableLayout">
+        android:layout_height="wrap_content">
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Usuario:"
-                android:id="@+id/textView4" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/txtUsuario"
-                android:layout_weight="1"
-                android:hint="Usuario" />
+                android:text="Payment:"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
         </TableRow>
 
         <TableRow
@@ -41,45 +32,18 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Nombres:"
-                android:id="@+id/textView" />
+                android:text="Method:"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <EditText
+            <Spinner
+                android:id="@+id/spMethodTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/txtNombres"
                 android:layout_weight="1"
-                android:hint="Nombres" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/tableLayout"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Apellidos:"
-                android:id="@+id/textView2" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/txtApellidos"
-                android:layout_weight="1"
-                android:hint="Apellidos" />
-
+                android:ems="10" />
         </TableRow>
 
         <TableRow
@@ -87,40 +51,87 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="E-Mail:"
-                android:id="@+id/textView3" />
+                android:text="Product:"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ID:"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
+                android:id="@+id/txtProductID"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/txtEmail"
                 android:layout_weight="1"
-                android:hint="E-Mail" />
+                android:ems="10"
+                android:hint="ProductID"
+                android:inputType="textPersonName" />
+
+            <!--<Spinner-->
+            <!--android:id="@+id/spProductName"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:ems="10" />-->
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quantity:"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <EditText
+                android:id="@+id/txtQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Quantity"
+                android:inputType="textPersonName" />
+
+            <!--<Spinner-->
+            <!--android:id="@+id/spProductName"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:ems="10" />-->
         </TableRow>
 
     </TableLayout>
 
     <Button
+        android:id="@+id/btnEnviar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enviar"
-        android:id="@+id/btnEnviar"
-        android:layout_below="@+id/tableLayout"
+        android:layout_alignEnd="@+id/tableLayout"
         android:layout_alignRight="@+id/tableLayout"
-        android:layout_alignEnd="@+id/tableLayout" />
+        android:layout_below="@+id/tableLayout"
+        android:text="Enviar" />
 
     <Button
+        android:id="@+id/btnCancelar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cancelar"
-        android:id="@+id/btnCancelar"
         android:layout_alignTop="@+id/btnEnviar"
         android:layout_toLeftOf="@+id/btnEnviar"
-        android:layout_toStartOf="@+id/btnEnviar" />
+        android:layout_toStartOf="@+id/btnEnviar"
+        android:text="Cancelar" />
 
 </RelativeLayout>

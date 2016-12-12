@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import mx.edu.itcelaya.ecommercecustomers.model.Cupon;
 import mx.edu.itcelaya.ecommercecustomers.model.Customer;
+import mx.edu.itcelaya.ecommercecustomers.model.Order;
 
 /**
  * Created by niluxer on 5/25/16.
@@ -36,7 +37,6 @@ public class Json {
             jsonBillingAddress.put("phone", "(555) 555-5555");
 
             jsonObj.put("billing_address", jsonBillingAddress);
-
 
             JSONObject jsonShippingAddress = new JSONObject(); // Another object to store the address
             jsonShippingAddress.put("first_name", customer.getShipping_address().getFirst_name());
@@ -76,6 +76,39 @@ public class Json {
 
             JSONObject jsonCupon = new JSONObject();
             jsonCupon.put("coupon", jsonObj);
+
+            return jsonCupon.toString();
+
+        } catch (JSONException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String OrderToJSON(Order order) {
+        try {
+            // Convert Java Object to JSON
+            JSONObject jsonObj = new JSONObject();
+
+            JSONObject jsonPaymentObj = new JSONObject();
+            jsonPaymentObj.put("method_id", order.getPayment_details().getMethod_id());
+            jsonPaymentObj.put("method_title", order.getPayment_details().getMethod_title());
+            jsonPaymentObj.put("paid", false);
+
+            jsonObj.put("payment_details", jsonPaymentObj);
+            jsonObj.put("customer_id", order.getCustomer_id());
+
+            JSONObject jsonLineItemsObj = new JSONObject();
+            jsonLineItemsObj.put("product_id", order.getLine_items().get(0).getId());
+            jsonLineItemsObj.put("quantity", order.getLine_items().get(0).getQuantity());
+
+            JSONArray jsonArrayLine = new JSONArray();
+            jsonArrayLine.put(jsonLineItemsObj);
+
+            jsonObj.put("line_items", jsonArrayLine);
+
+            JSONObject jsonCupon = new JSONObject();
+            jsonCupon.put("order", jsonObj);
 
             return jsonCupon.toString();
 
