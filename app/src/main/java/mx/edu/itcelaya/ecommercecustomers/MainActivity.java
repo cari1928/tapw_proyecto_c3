@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     List<Customer> customerItem = new ArrayList<Customer>();
     List<Product> productItem = new ArrayList<Product>();
 
-
     public static String consumer_key = "ck_8610d1b7c089c88b439f3d8102d56ad1ef23b12f";
     public static String consumer_secret = "cs_659b8deee047824dff82defb6354d47823b01fdb";
     public static String url = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/customers";
@@ -78,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
-        ;
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
@@ -106,7 +104,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(iProduct);
                     break;
                 case 4:
-                    loadSales();
+                    //loadSales();
+                    Intent iReport = new Intent(MainActivity.this, ReportActivity.class);
+                    startActivity(iReport);
                     break;
                 case 5:
                     //desloguear

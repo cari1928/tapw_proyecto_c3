@@ -44,7 +44,6 @@ public class NewCustomerActivity extends Activity implements View.OnClickListene
 
     }
 
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

@@ -28,7 +28,8 @@
         <activity android:name=".CategoryActivity" />
         <activity android:name=".NewOrderActivity" />
         <activity android:name=".NewCuponActivity" />
-        <activity android:name=".ProductActivity"></activity>
+        <activity android:name=".ProductActivity" />
+        <activity android:name=".ReportActivity"></activity>
     </application>
 
 </manifest>

@@ -3,7 +3,6 @@ package mx.edu.itcelaya.ecommercecustomers;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,12 +10,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import mx.edu.itcelaya.ecommercecustomers.model.Cupon;
-import mx.edu.itcelaya.ecommercecustomers.model.Customer;
 import mx.edu.itcelaya.ecommercecustomers.task.AsyncResponse;
 import mx.edu.itcelaya.ecommercecustomers.task.WooCommerceTask;
 
 public class NewCuponActivity extends AppCompatActivity implements View.OnClickListener {
-
     String optType[] = {"Fixed Cart", "Percent", "Fixed Product", "Percent Product"};
     String optIndividualUse[] = {"Yes", "No"};
     String jsonResult;
