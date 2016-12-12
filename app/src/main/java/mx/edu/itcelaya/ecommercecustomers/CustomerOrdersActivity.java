@@ -23,26 +23,26 @@ import mx.edu.itcelaya.ecommercecustomers.task.AsyncResponse;
 import mx.edu.itcelaya.ecommercecustomers.task.WooCommerceTask;
 import mx.edu.itcelaya.ecommercecustomers.utils.NukeSSLCerts;
 
-public class CustomerOrdersActivity extends ListActivity {
+public class CustomerOrdersActivity extends AppCompatActivity {
 
-    ListView listOrders;
-    //String url = "https://192.168.56.1/~niluxer/wordpress/wc-api/v3/customers/";
-    String url = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/customers";
-    String jsonResult;
-    List<Order> items   = new ArrayList<Order>();
+    ListView list;
+    String url, jsonResult;
+    int idCustomer;
+    List<Order> items = new ArrayList<Order>();
+    OrderAdapter oAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_customer_orders);
-        listOrders = getListView();
+        setContentView(R.layout.activity_customer_orders);
+
         Intent i = getIntent();
-        String idCustomer = i.getStringExtra("id_customer");
-        //url.replaceAll("id_customer", idCustomer);
-        url = url + idCustomer + "/orders";
-        //System.out.println(url);
-        //Toast.makeText(this, url, Toast.LENGTH_LONG).show();
-        NukeSSLCerts.nuke();
+        idCustomer = i.getIntExtra("idCustomer", 0);
+
+        url = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/customers/" + idCustomer + "/orders";
+
+        list = (ListView) findViewById(R.id.list);
+        registerForContextMenu(list);
         loadOrders();
     }
 
@@ -54,7 +54,7 @@ public class CustomerOrdersActivity extends ListActivity {
                 ListOrders();
             }
         });
-        tarea.execute(new String[] { url });
+        tarea.execute(new String[]{ url });
 
     }
 
@@ -66,11 +66,10 @@ public class CustomerOrdersActivity extends ListActivity {
             for (int i = 0; i < jsonMainNode.length(); i++) {
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
 
-
                 JSONArray jsonProductsNode = jsonChildNode.optJSONArray("line_items");
 
                 String sProducts = "";
-                List<Product> products   = new ArrayList<Product>();
+                List<Product> products = new ArrayList<Product>();
                 for (int x = 0; x < jsonProductsNode.length(); x++) {
                     JSONObject jsonChildNodeProduct = jsonProductsNode.getJSONObject(x);
                     //sProducts += jsonChildNodeProduct.optString("product_id") + ",";
@@ -82,14 +81,13 @@ public class CustomerOrdersActivity extends ListActivity {
                     ));
                 }
 
-                items.add(
-                        new Order(
-                                jsonChildNode.optInt("id"),
-                                jsonChildNode.optInt("order_number"),
-                                jsonChildNode.optString("status"),
-                                jsonChildNode.optDouble("total"),
-                                products
-                        ));
+                items.add(new Order(
+                        jsonChildNode.optInt("id"),
+                        jsonChildNode.optInt("order_number"),
+                        jsonChildNode.optString("status"),
+                        jsonChildNode.optDouble("total"),
+                        products
+                ));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -97,8 +95,8 @@ public class CustomerOrdersActivity extends ListActivity {
                     Toast.LENGTH_LONG).show();
 
         }
-
-        listOrders.setAdapter(new OrderAdapter(this, items));
+        oAdapter = new OrderAdapter(this, items);
+        list.setAdapter(oAdapter);
     }
 
 }

@@ -62,8 +62,6 @@ public class OrderAdapter extends BaseAdapter {
 
         TextView tvOrderNumber   = (TextView) rowView.findViewById(R.id.tvOrderNumber);
         TextView tvStatus        = (TextView) rowView.findViewById(R.id.tvStatus);
-        //TextView tvProductName        = (TextView) rowView.findViewById(R.id.tvProductName);
-        //TextView tvProductPrice        = (TextView) rowView.findViewById(R.id.tvProductPrice);
         ListView lvProducts = (ListView) rowView.findViewById(R.id.lvProducts);
 
         final Order item = this.orders.get(position);
@@ -76,10 +74,9 @@ public class OrderAdapter extends BaseAdapter {
             Product element = iter.next();
             list.add(element.getName());
         }
-        final ArrayAdapter adapter = new ArrayAdapter(context,
-                android.R.layout.simple_list_item_1, list);
+
+        final ArrayAdapter adapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, list);
         lvProducts.setAdapter(adapter);
-        //tvProductName.setText();
         rowView.setTag(item.getId());
         return rowView;
     }

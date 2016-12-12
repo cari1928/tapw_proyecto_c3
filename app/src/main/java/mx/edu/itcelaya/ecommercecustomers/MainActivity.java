@@ -189,9 +189,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void setResponse(String output) {
                 jsonResult = output;
-
-                //Toast.makeText(MainActivity.this, jsonResult, Toast.LENGTH_LONG).show();
-
                 Intent intent_grafica = new Intent(MainActivity.this, Grafica1Activity.class);
                 intent_grafica.putExtra("json", jsonResult);
                 startActivity(intent_grafica);
@@ -223,14 +220,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (item.getItemId()) {
             case R.id.mnuEdit:
-                //Toast.makeText(MainActivity.this, "Edit" + customer.getLast_name(), Toast.LENGTH_SHORT).show();
                 editCustomer(customer.getId());
-
                 break;
-            case R.id.mnuDelete:
-                //Toast.makeText(MainActivity.this, "Delete" + customer.getLast_name(), Toast.LENGTH_SHORT).show();
-                deleteCustomer(customer.getId());
 
+            case R.id.mnuDelete:
+                deleteCustomer(customer.getId());
+                break;
+
+            case R.id.mnuDetail:
+                Intent iOrders = new Intent(this, CustomerOrdersActivity.class);
+                iOrders.putExtra("idCustomer", customer.getId());
+                startActivity(iOrders);
                 break;
         }
         return true;
