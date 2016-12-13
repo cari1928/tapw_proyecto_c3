@@ -11,8 +11,13 @@
     tools:context="mx.edu.itcelaya.ecommercecustomers.GraphActivity">
 
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/bar1"
+    android:id="@+id/grBar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"></com.github.mikephil.charting.charts.BarChart>
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/grPie"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.github.mikephil.charting.charts.BarChart>
+        android:layout_height="match_parent"></com.github.mikephil.charting.charts.PieChart>
 
 </RelativeLayout>

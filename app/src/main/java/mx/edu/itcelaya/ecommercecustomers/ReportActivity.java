@@ -108,8 +108,10 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void setResponse(String output) {
                 jsonResult = output;
+
                 Intent iGraph = new Intent(ReportActivity.this, GraphActivity.class);
                 iGraph.putExtra("json", jsonResult);
+                iGraph.putExtra("graph", spGraph.getSelectedItem().toString());
                 startActivity(iGraph);
                 //Toast.makeText(getApplicationContext(), jsonResult, Toast.LENGTH_LONG).show();
             }

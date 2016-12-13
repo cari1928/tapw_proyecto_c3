@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Intent iProduct = new Intent(MainActivity.this, ProductActivity.class);
                     startActivity(iProduct);
                     break;
-                case 4:
+                case 4: //reporte
                     //loadSales();
                     Intent iReport = new Intent(MainActivity.this, ReportActivity.class);
                     startActivity(iReport);
