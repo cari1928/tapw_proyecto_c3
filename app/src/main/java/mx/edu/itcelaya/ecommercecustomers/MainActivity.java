@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 
 import mx.edu.itcelaya.ecommercecustomers.model.Address;
 import mx.edu.itcelaya.ecommercecustomers.model.Customer;
+import mx.edu.itcelaya.ecommercecustomers.model.Order;
 import mx.edu.itcelaya.ecommercecustomers.model.Product;
 import mx.edu.itcelaya.ecommercecustomers.task.AsyncResponse;
 import mx.edu.itcelaya.ecommercecustomers.task.LoginTask;
@@ -46,18 +47,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static String url = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/customers";
     String auth_url = "https://tapw-proyecto-c3-cari1928.c9users.io/auth_users.php";
 
+    private int customer_id = 0;
+
+    //-------------------Servicios-------------------------
     String jsonResult, loginResult;
-    Dialog dLogin;
     CustomerAdapter cAdapter;
     ProductAdapter pAdapter;
-    Button btnAceptar, btnCancelar;
-    EditText txtUsername, txtPassword;
 
     //------------Menús Customer y Administrator------------
     Menu menu;
     public static String role = "";
     //private boolean isChangedStat = false;
     private int isChangedStat = 0; //0 = invitado, 1 = admin, 2 = customer
+    Dialog dLogin;
+    EditText txtUsername, txtPassword;
+    Button btnAceptar, btnCancelar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +71,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Toast.makeText(MainActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();
 
-        //importante para el funcionamiento normal!!!!!
+        //funcionamiento normal con login!!!!
         loadProducts("https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/products");
 
-        //------------porque el login falla, pero solo es temporal!!!!!
+        //------------para iniciar como admin
         //loadCustomers();
         //tvNombre.setText(nombre_completo);
         //role = "administrator";
@@ -123,8 +127,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if (role.equals("customer")) {
             switch (id) {
-                case 7:
-                    //desloguear
+                case 1: //nuevo pedido
+                    break;
+                case 2: //pedidos
+                    Intent iOrders = new Intent(MainActivity.this, OrderStatusActivity.class);
+                    iOrders.putExtra("customer_id", customer_id);
+                    startActivity(iOrders);
+                    break;
+                case 3: //desloguear
                     break;
                 default:
                     bandera = super.onOptionsItemSelected(item);
@@ -170,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Integer stock_quantity = jsonChildNode.optInt("stock_quantity");
                 String ImageURL = jsonChildNode.optString("featured_src");
 
-                if(stock_quantity < 0) {
+                if (stock_quantity < 0) {
                     stock_quantity = 0;
                 }
 
@@ -235,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 iOrders.putExtra("idCustomer", customer.getId());
                 startActivity(iOrders);
                 break;
-            
+
             case R.id.mnuNewOrder:
                 Intent iNewOrder = new Intent(this, NewOrderActivity.class);
                 iNewOrder.putExtra("idCustomer", customer.getId());
@@ -356,6 +366,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
                 Boolean valido = jsonChildNode.optBoolean("valido");
+                String id = jsonChildNode.optString("id");
                 String rol = jsonChildNode.optString("rol");
                 String nombre_completo = jsonChildNode.optString("nombre_completo");
 
@@ -364,20 +375,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     loadCustomers();
                     tvNombre.setText(nombre_completo);
                     role = rol;
-                    //isChangedStat = false;
                     isChangedStat = 1;
                 } else if (valido == true && rol.equals("customer")) {
+                    customer_id = Integer.parseInt(id);
+                    //loadOrders("https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/customers/" + customer_id + "/orders");
                     tvNombre.setText(nombre_completo);
                     role = rol;
-                    //isChangedStat = true;
                     isChangedStat = 2;
                 } else {
                     Toast.makeText(this, "" + "Usuario y/o contrase;a no validos", Toast.LENGTH_LONG).show();
                 }
-
             }
         } catch (JSONException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             System.out.println("Errors:" + e.getMessage());
         }
     }
@@ -387,13 +397,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         menu.clear();
 
         switch (isChangedStat) {
-            case 0:
+            case 0: //invitado
                 menu.add(0, 1, 0, "Login");
                 menu.add(0, 2, 0, "Cart");
                 menu.add(0, 3, 0, "Checkout");
                 break;
 
-            case 1:
+            case 1: //admin
                 menu.add(0, 1, 0, "Categorías");
                 //menu.add(0, 2, 0, "Nuevo Cliente");
                 menu.add(0, 2, 0, "Nuevo Cupón");
@@ -403,14 +413,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 menu.add(0, 5, 0, "Logout");
                 break;
 
-            case 2:
-                menu.add(0, 1, 0, "Datos Personales");
-                menu.add(0, 2, 0, "Nuevo Pedido");
-                menu.add(0, 3, 0, "Pedido");
-                menu.add(0, 4, 0, "Logout");
+            case 2: //customer
+                //menu.add(0, 1, 0, "Datos Personales");
+                menu.add(0, 1, 0, "Nuevo Pedido");
+                menu.add(0, 2, 0, "Pedidos");
+                menu.add(0, 3, 0, "Logout");
                 break;
         }
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void loadOrders(String p_url) {
+        //"https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/customers/" + customer_id + "/orders"
+        WooCommerceTask tarea = new WooCommerceTask(this, WooCommerceTask.GET_TASK, "Cargando Pedidos...", new AsyncResponse() {
+            @Override
+            public void setResponse(String output) {
+                jsonResult = output;
+                //Toast.makeText(MainActivity.this, jsonResult, Toast.LENGTH_SHORT).show();
+                ListOrders();
+            }
+        });
+        tarea.execute(new String[]{p_url});
+    }
+
+    private void ListOrders() {
+        List<Order> oItems = new ArrayList<Order>();
+        OrderAdapter oAdapter;
+
+        try {
+            JSONObject jsonResponse = new JSONObject(jsonResult);
+            JSONArray jsonMainNode = jsonResponse.optJSONArray("orders");
+
+            for (int i = 0; i < jsonMainNode.length(); i++) {
+                JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+
+                JSONArray jsonProductsNode = jsonChildNode.optJSONArray("line_items");
+
+                String sProducts = "";
+                List<Product> products = new ArrayList<Product>();
+                for (int x = 0; x < jsonProductsNode.length(); x++) {
+                    JSONObject jsonChildNodeProduct = jsonProductsNode.getJSONObject(x);
+                    //sProducts += jsonChildNodeProduct.optString("product_id") + ",";
+                    products.add(new Product(
+                            jsonChildNodeProduct.optInt("product_id"),
+                            jsonChildNodeProduct.optString("name"),
+                            jsonChildNodeProduct.optDouble("price"),
+                            jsonChildNodeProduct.optInt("quantity")
+                    ));
+                }
+
+                oItems.add(new Order(
+                        jsonChildNode.optInt("id"),
+                        jsonChildNode.optInt("order_number"),
+                        jsonChildNode.optString("status"),
+                        jsonChildNode.optDouble("total"),
+                        products
+                ));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Error" + e.toString(), Toast.LENGTH_LONG).show();
+
+        }
+        oAdapter = new OrderAdapter(this, oItems);
+        list.setAdapter(oAdapter);
     }
 
     private void deleteCustomer(final int idCustomer) {
@@ -446,7 +512,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent i = new Intent(this, EditCustomerActivity.class);
         i.putExtra("idCustomer", idCustomer);
         startActivity(i);
-
     }
 
     private void newCustomer() {

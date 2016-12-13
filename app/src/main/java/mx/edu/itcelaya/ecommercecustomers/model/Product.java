@@ -8,6 +8,7 @@ public class Product {
     String name;
     Double price;
     int quantity;
+    String description;
     private String imageUrl;
 
     public Product(int id, String name, Double price, int quantity)
@@ -28,6 +29,14 @@ public class Product {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+        this.imageUrl = imageUrl;
+    }
+
+    public Product(int id, String imageUrl, String name, Double price, String description) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
         this.imageUrl = imageUrl;
     }
 

@@ -16,12 +16,29 @@ public class Order {
     Payment payment_details;
     int customer_id;
 
+    private List<Integer> products_id;
+    private String created_at;
+    private int total_line_items_quantity;
+    private String full_name;
+    private String email;
+
     public Order(int id, int order_number, String status, Double total, List<Product> line_items) {
         this.id = id;
         this.order_number = order_number;
         this.status = status;
         this.total = total;
         this.line_items = line_items;
+    }
+
+    public Order(int order_number, String created_at, int total_line_items_quantity, String full_name, String email, List<Integer> products_id) {
+        this.order_number = order_number;
+        this.created_at = created_at;
+        this.total_line_items_quantity = total_line_items_quantity;
+        this.total = total;
+        this.payment_details = payment_details;
+        this.full_name = full_name;
+        this.email = email;
+        this.products_id = products_id;
     }
 
     public Order() {
@@ -81,5 +98,45 @@ public class Order {
 
     public void setCustomer_id(int customer_id) {
         this.customer_id = customer_id;
+    }
+
+    public List<Integer> getProducts_id() {
+        return products_id;
+    }
+
+    public void setProducts_id(List<Integer> products_id) {
+        this.products_id = products_id;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public int getTotal_line_items_quantity() {
+        return total_line_items_quantity;
+    }
+
+    public void setTotal_line_items_quantity(int total_line_items_quantity) {
+        this.total_line_items_quantity = total_line_items_quantity;
+    }
+
+    public String getFull_name() {
+        return full_name;
+    }
+
+    public void setFull_name(String full_name) {
+        this.full_name = full_name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

@@ -1,6 +1,7 @@
 package mx.edu.itcelaya.ecommercecustomers;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -74,30 +75,46 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
+
+        String time = spTime.getSelectedItem().toString();
+        String tmpURL;
+
+        if (!time.equals("Day")) {
+
+            if (time.equals("Last Month")) {
+                time = "last_month";
+            }
+            time = time.toLowerCase();
+        }
+
+        tmpURL = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/reports/sales?filter[period]=" + time;
+
         switch (view.getId()) {
             case R.id.btnGraph:
-                //saveCupon();
-                Toast.makeText(ReportActivity.this, "Mostrar gráfica", Toast.LENGTH_LONG).show();
+                loadGraphic(tmpURL);
                 break;
             case R.id.btnReport:
-                //finish();
-                String time = spTime.getSelectedItem().toString();
-
-                if (!time.equals("Day")) {
-
-                    if (time.equals("Last Month")) {
-                        time = "last_month";
-                    }
-
-                    time = time.toLowerCase();
-                    loadReport("https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/reports/sales?filter[period]=" + time);
-                }
+                loadReport(tmpURL);
                 break;
         }
 
         if (view == btnRegresa) {
             dialogFoto.dismiss();
         }
+    }
+
+    private void loadGraphic(String p_url){
+        WooCommerceTask tarea = new WooCommerceTask(this, WooCommerceTask.GET_TASK, "Cargando Reporte...", new AsyncResponse() {
+            @Override
+            public void setResponse(String output) {
+                jsonResult = output;
+                Intent iGraph = new Intent(ReportActivity.this, GraphActivity.class);
+                iGraph.putExtra("json", jsonResult);
+                startActivity(iGraph);
+                //Toast.makeText(getApplicationContext(), jsonResult, Toast.LENGTH_LONG).show();
+            }
+        });
+        tarea.execute(new String[]{p_url});
     }
 
     private void loadReport(String p_url) {
@@ -109,8 +126,11 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
                 //Toast.makeText(getApplicationContext(), jsonResult, Toast.LENGTH_LONG).show();
             }
         });
-
         tarea.execute(new String[]{p_url});
+    }
+
+    private void showGraphic(){
+
     }
 
     public void ListReport() {
