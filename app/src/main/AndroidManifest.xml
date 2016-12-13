@@ -32,7 +32,8 @@
         <activity android:name=".ReportActivity" />
         <activity android:name=".GraphActivity" />
         <activity android:name=".OrderStatusActivity" />
-        <activity android:name=".CartActivity"></activity>
+        <activity android:name=".CartActivity" />
+        <activity android:name=".ApplyCuponActivity"></activity>
     </application>
 
 </manifest>

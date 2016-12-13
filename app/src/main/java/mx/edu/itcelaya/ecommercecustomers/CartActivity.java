@@ -30,8 +30,4 @@ public class CartActivity extends AppCompatActivity {
         pAdapter = new ProductAdapter(this, items, 1);
         list.setAdapter(pAdapter);
     }
-
-    private void arrayToList(String[] array){
-        System.out.print("hola");
-    }
 }

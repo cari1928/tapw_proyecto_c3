@@ -15,6 +15,7 @@ public class Order {
 
     Payment payment_details;
     int customer_id;
+    String total_discount;
 
     private List<Integer> products_id;
     private String created_at;
@@ -138,5 +139,13 @@ public class Order {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getTotal_discount() {
+        return total_discount;
+    }
+
+    public void setTotal_discount(String total_discount) {
+        this.total_discount = total_discount;
     }
 }

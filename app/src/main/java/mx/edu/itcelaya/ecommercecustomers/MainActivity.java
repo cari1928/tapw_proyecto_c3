@@ -107,8 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(in);
                     break;
                 case 2: //nuevo cupón
-                    //newCustomer();
                     Intent iCupon = new Intent(this, NewCuponActivity.class);
+                    iCupon.putExtra("option", 0); //0 es para admin; 1 para guest
                     startActivity(iCupon);
                     break;
                 case 3: //productos
@@ -156,7 +156,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(iCart);
                     break;
                 case 3: //hacer la orden
-                    Toast.makeText(MainActivity.this, "Checkout", Toast.LENGTH_LONG).show();
+                    newCustomer();
+                    //Toast.makeText(MainActivity.this, "Checkout", Toast.LENGTH_LONG).show();
                     break;
 
                 case 4: //desloguear
@@ -580,6 +581,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void newCustomer() {
         Intent i = new Intent(this, NewCustomerActivity.class);
+        i.putExtra("cart", cart);
         startActivity(i);
     }
 

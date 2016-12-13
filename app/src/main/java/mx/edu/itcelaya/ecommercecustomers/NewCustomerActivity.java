@@ -11,10 +11,12 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import mx.edu.itcelaya.ecommercecustomers.model.Address;
 import mx.edu.itcelaya.ecommercecustomers.model.Customer;
+import mx.edu.itcelaya.ecommercecustomers.model.Product;
 import mx.edu.itcelaya.ecommercecustomers.task.AsyncResponse;
 import mx.edu.itcelaya.ecommercecustomers.task.WooCommerceTask;
 import mx.edu.itcelaya.ecommercecustomers.utils.Json;
@@ -27,11 +29,15 @@ public class NewCustomerActivity extends Activity implements View.OnClickListene
     EditText txtNombres, txtApellidos, txtEmail, txtUsuario;
     Button btnEnviar, btnCancelar;
     Customer customer = new Customer();
+    ArrayList<Product> cart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_customer);
+
+        Intent i = getIntent();
+        cart = (ArrayList<Product>) i.getSerializableExtra("cart");
 
         txtNombres   = (EditText) findViewById(R.id .txtNombres);
         txtApellidos = (EditText) findViewById(R.id.txtApellidos);
@@ -41,7 +47,6 @@ public class NewCustomerActivity extends Activity implements View.OnClickListene
         btnCancelar  = (Button) findViewById(R.id.btnCancelar);
         btnEnviar.setOnClickListener(this);
         btnCancelar.setOnClickListener(this);
-
     }
 
     @Override
@@ -62,7 +67,13 @@ public class NewCustomerActivity extends Activity implements View.OnClickListene
             public void setResponse(String output) {
                 jsonResult = output;
                 Toast.makeText(NewCustomerActivity.this, "Datos guardados correctamente.", Toast.LENGTH_LONG).show();
-                finish();
+
+                Intent i = new Intent(NewCustomerActivity.this, ApplyCuponActivity.class);
+                i.putExtra("jsonCustomer", jsonResult);
+                i.putExtra("cart", cart);
+                startActivity(i);
+
+                //finish(); //dejar aquí??
             }
         });
 
@@ -76,7 +87,12 @@ public class NewCustomerActivity extends Activity implements View.OnClickListene
         tarea.setObject(customer);
 
         tarea.execute(new String[] { MainActivity.url });
+    }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        finish();
     }
 
 }
