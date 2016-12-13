@@ -127,17 +127,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if (role.equals("customer")) {
             switch (id) {
-                case 1: //nuevo pedido
-                    Intent iNewOrder = new Intent(this, NewOrderActivity.class);
-                    iNewOrder.putExtra("idCustomer", customer_id);
-                    startActivity(iNewOrder);
+                case 1: //datos personales
+                    editCustomer(customer_id);
                     break;
-                case 2: //pedidos
+                case 2: //nuevo pedido
+                    newOrder(customer_id); //verificar que funcione!!!
+//                    Intent iNewOrder = new Intent(this, NewOrderActivity.class);
+//                    iNewOrder.putExtra("idCustomer", customer_id);
+//                    startActivity(iNewOrder);
+                    break;
+                case 3: //pedidos
                     Intent iOrders = new Intent(MainActivity.this, OrderStatusActivity.class);
                     iOrders.putExtra("customer_id", customer_id);
                     startActivity(iOrders);
                     break;
-                case 3: //desloguear
+                case 4: //desloguear
                     break;
                 default:
                     bandera = super.onOptionsItemSelected(item);
@@ -157,6 +161,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bandera = super.onOptionsItemSelected(item);
         }
         return bandera;
+    }
+
+    private void newOrder(int customerID){
+        Intent iNewOrder = new Intent(this, NewOrderActivity.class);
+        iNewOrder.putExtra("idCustomer", customerID);
+        startActivity(iNewOrder);
     }
 
     public void loadProducts(String p_url) {
@@ -233,7 +243,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Object obj  = adapter.getItem(info.position);
         Customer customer = (Customer) adapter.getItem(info.position);
 
-
         switch (item.getItemId()) {
             case R.id.mnuEdit:
                 editCustomer(customer.getId());
@@ -250,9 +259,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.mnuNewOrder:
-                Intent iNewOrder = new Intent(this, NewOrderActivity.class);
-                iNewOrder.putExtra("idCustomer", customer.getId());
-                startActivity(iNewOrder);
+                newOrder(customer.getId()); //verificar que funcione!!!
+//                Intent iNewOrder = new Intent(this, NewOrderActivity.class);
+//                iNewOrder.putExtra("idCustomer", customer.getId());
+//                startActivity(iNewOrder);
                 break;
         }
         return true;
@@ -417,10 +427,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case 2: //customer
-                //menu.add(0, 1, 0, "Datos Personales");
-                menu.add(0, 1, 0, "Nuevo Pedido");
-                menu.add(0, 2, 0, "Pedidos");
-                menu.add(0, 3, 0, "Logout");
+                menu.add(0, 1, 0, "Datos Personales");
+                menu.add(0, 2, 0, "Nuevo Pedido");
+                menu.add(0, 3, 0, "Pedidos");
+                menu.add(0, 4, 0, "Logout");
                 break;
         }
         return super.onPrepareOptionsMenu(menu);
