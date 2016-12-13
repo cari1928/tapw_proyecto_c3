@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ListView list;
     List<Customer> customerItem = new ArrayList<Customer>();
     List<Product> productItem = new ArrayList<Product>();
+    ArrayList<Product> cart = new ArrayList<Product>();
 
     public static String consumer_key = "ck_8610d1b7c089c88b439f3d8102d56ad1ef23b12f";
     public static String consumer_secret = "cs_659b8deee047824dff82defb6354d47823b01fdb";
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         NukeSSLCerts.nuke();
 
+        cart = new ArrayList<>();
         Toast.makeText(MainActivity.this, "Bienvenido", Toast.LENGTH_LONG).show();
 
         //funcionamiento normal con login!!!!
@@ -132,9 +134,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case 2: //nuevo pedido
                     newOrder(customer_id); //verificar que funcione!!!
-//                    Intent iNewOrder = new Intent(this, NewOrderActivity.class);
-//                    iNewOrder.putExtra("idCustomer", customer_id);
-//                    startActivity(iNewOrder);
                     break;
                 case 3: //pedidos
                     Intent iOrders = new Intent(MainActivity.this, OrderStatusActivity.class);
@@ -148,14 +147,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else {
             switch (id) {
-                case 1:
+                case 1: //login
                     mostrarLogin();
                     break;
-                case 2:
-                    Toast.makeText(MainActivity.this, "Carrito de compras", Toast.LENGTH_LONG).show();
+                case 2: //ver productos del carrito
+                    Intent iCart = new Intent(MainActivity.this, CartActivity.class);
+                    iCart.putExtra("cart", cart);
+                    startActivity(iCart);
                     break;
-                case 3:
+                case 3: //hacer la orden
                     Toast.makeText(MainActivity.this, "Checkout", Toast.LENGTH_LONG).show();
+                    break;
+
+                case 4: //desloguear
                     break;
             }
             bandera = super.onOptionsItemSelected(item);
@@ -163,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return bandera;
     }
 
-    private void newOrder(int customerID){
+    private void newOrder(int customerID) {
         Intent iNewOrder = new Intent(this, NewOrderActivity.class);
         iNewOrder.putExtra("idCustomer", customerID);
         startActivity(iNewOrder);
@@ -229,19 +233,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreateContextMenu(menu, v, menuInfo);
 
         if (v.getId() == R.id.listEcommerce) {
-            menu.setHeaderTitle("Opciones");
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.customer_menu, menu);
+            if (role.equals("administrator")) {
+                menu.setHeaderTitle("Options");
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.admin_menu, menu);
+            } else if (!role.equals("customer")) {
+                menu.setHeaderTitle("Options");
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.guest_menu, menu);
+            } else {
+                //checar esto porque no funciona!!!
+                menu.setHeaderTitle("No Options");
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.customer_menu, menu);
+            }
         }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        Customer customer = null;
+        Product product = null;
         //return super.onContextItemSelected(item);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         Adapter adapter = list.getAdapter();
         //Object obj  = adapter.getItem(info.position);
-        Customer customer = (Customer) adapter.getItem(info.position);
+
+        switch (isChangedStat) {
+            case 0:
+            case 2:
+                product = (Product) adapter.getItem(info.position);
+                break;
+            case 1:
+                customer = (Customer) adapter.getItem(info.position);
+                break;
+        }
 
         switch (item.getItemId()) {
             case R.id.mnuEdit:
@@ -260,12 +286,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.mnuNewOrder:
                 newOrder(customer.getId()); //verificar que funcione!!!
-//                Intent iNewOrder = new Intent(this, NewOrderActivity.class);
-//                iNewOrder.putExtra("idCustomer", customer.getId());
-//                startActivity(iNewOrder);
+                break;
+
+            case R.id.mnuCart:
+                addToCart(searchID(product.getId()), product);
                 break;
         }
         return true;
+    }
+
+    private void addToCart(int position, Product p_product) {
+        if (position != -1) {
+            cart.get(position).setQuantity(cart.get(position).getQuantity() + 1); //aumenta en 1 la cantidad de productos
+        } else {
+            //(int id, String name, Double price, int quantity, String imageUrl)
+            cart.add(new Product(
+                    p_product.getId(), p_product.getName(), p_product.getPrice(), 1, p_product.getImageUrl()
+            )); //se agrega al carrito
+        }
+        Toast.makeText(this, "Product added", Toast.LENGTH_SHORT).show();
+    }
+
+    private int searchID(int p_customerID) {
+        for (int i = 0; i < cart.size(); i++) {
+            if (cart.get(i).getId() == p_customerID) {
+                return i; //regresa la posición del producto
+            }
+        }
+
+        return -1; //no encontró un producto con ese ID
     }
 
     private void mostrarLogin() {
@@ -389,12 +438,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     tvNombre.setText(nombre_completo);
                     role = rol;
                     isChangedStat = 1;
+
                 } else if (valido == true && rol.equals("customer")) {
                     customer_id = Integer.parseInt(id);
                     //loadOrders("https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/customers/" + customer_id + "/orders");
                     tvNombre.setText(nombre_completo);
                     role = rol;
                     isChangedStat = 2;
+
                 } else {
                     Toast.makeText(this, "" + "Usuario y/o contrase;a no validos", Toast.LENGTH_LONG).show();
                 }
@@ -541,7 +592,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (role.equals("administrator")) {
             cAdapter.customers.clear();
             loadCustomers();
-        } else if(role.equals("customer")) {
+        } else {
+            pAdapter.productos.clear();
             loadProducts("https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/products");
         }
     }

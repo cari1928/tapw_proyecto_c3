@@ -38,10 +38,18 @@ public class ProductAdapter extends BaseAdapter {
     private Context context;
     public List<Product> productos;
     ImageView img1;
+    int option; //para saber qué poner en la parte de stock_quantity
 
     public ProductAdapter(Context context, List<Product> productos) {
         this.context = context;
         this.productos = productos;
+        option = 0;
+    }
+
+    public ProductAdapter(Context context, List<Product> productos, int option) {
+        this.context = context;
+        this.productos = productos;
+        this.option = option;
     }
 
     @Override
@@ -68,9 +76,7 @@ public class ProductAdapter extends BaseAdapter {
         }
 
         TextView tvName = (TextView) rowView.findViewById(R.id.tvName);
-
         TextView tvID = (TextView) rowView.findViewById(R.id.tvID);
-
         TextView tvPrice = (TextView) rowView.findViewById(R.id.tvPrice);
         TextView tvStockQuantity = (TextView) rowView.findViewById(R.id.tvStockQuantity);
         img1 = (ImageView) rowView.findViewById(R.id.imgProduct);
@@ -79,7 +85,13 @@ public class ProductAdapter extends BaseAdapter {
         tvName.setText(item.getName());
         tvID.setText("ID: " + item.getId());
         tvPrice.setText("$" + item.getPrice());
-        tvStockQuantity.setText("In Stock: " + item.getQuantity());
+
+        if (option == 0){
+            tvStockQuantity.setText("In Stock: " + item.getQuantity());
+        } else if(option == 1) {
+            tvStockQuantity.setText("Quantity: " + item.getQuantity());
+        }
+
         String sUrl = item.getImageUrl();
         rowView.setTag(item.getId());
 

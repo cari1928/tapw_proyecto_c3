@@ -1,9 +1,11 @@
 package mx.edu.itcelaya.ecommercecustomers.model;
 
+import java.io.Serializable;
+
 /**
  * Created by niluxer on 5/20/16.
  */
-public class Product {
+public class Product implements Serializable {
     int id;
     String name;
     Double price;

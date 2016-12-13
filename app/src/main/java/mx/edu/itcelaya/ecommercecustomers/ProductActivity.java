@@ -18,7 +18,6 @@ import mx.edu.itcelaya.ecommercecustomers.task.AsyncResponse;
 import mx.edu.itcelaya.ecommercecustomers.task.WooCommerceTask;
 
 public class ProductActivity extends AppCompatActivity {
-
     String jsonResult;
     public static String url = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/products";
     List<Product> items = new ArrayList<Product>();

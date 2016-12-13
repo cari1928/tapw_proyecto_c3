@@ -31,7 +31,8 @@
         <activity android:name=".ProductActivity" />
         <activity android:name=".ReportActivity" />
         <activity android:name=".GraphActivity" />
-        <activity android:name=".OrderStatusActivity"></activity>
+        <activity android:name=".OrderStatusActivity" />
+        <activity android:name=".CartActivity"></activity>
     </application>
 
 </manifest>
