@@ -128,6 +128,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (role.equals("customer")) {
             switch (id) {
                 case 1: //nuevo pedido
+                    Intent iNewOrder = new Intent(this, NewOrderActivity.class);
+                    iNewOrder.putExtra("idCustomer", customer_id);
+                    startActivity(iNewOrder);
                     break;
                 case 2: //pedidos
                     Intent iOrders = new Intent(MainActivity.this, OrderStatusActivity.class);
@@ -523,10 +526,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onRestart() {
         super.onRestart();
         list.setAdapter(null);
-        cAdapter.customers.clear();
-        //cAdapter.notifyDataSetChanged();
 
-        //quizá sea necesario poner un if para que dependiendo de la variable onchanged y role muestre una lista en específico
-        loadCustomers();
+        //verificar que funcione esto!!
+        if (role.equals("administrator")) {
+            cAdapter.customers.clear();
+            loadCustomers();
+        } else if(role.equals("customer")) {
+            loadProducts("https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/products");
+        }
     }
 }
