@@ -11,11 +11,11 @@
     tools:context="mx.edu.itcelaya.ecommercecustomers.OrderStatusActivity">
 
     <Spinner
+        android:id="@+id/spStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/spStatus"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
 
     <ListView
         android:id="@+id/lvOrders"
@@ -23,7 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp">
-    </ListView>
+        android:layout_marginTop="20dp"></ListView>
 
 </RelativeLayout>

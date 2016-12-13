@@ -154,50 +154,33 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
 
             //JSONArray jsonLists = jsonChildNode.optJSONArray("totals");
 
-            String prueba = jsonChildNode.optString("totals");
-            JSONObject jsonPrueba = jsonChildNode.optJSONObject("totals");
-            Toast.makeText(getApplicationContext(), prueba, Toast.LENGTH_LONG).show();
-            System.out.print(prueba);
+//            String prueba = jsonChildNode.optString("totals");
+//            JSONObject jsonPrueba = jsonChildNode.optJSONObject("totals");
+//            Toast.makeText(getApplicationContext(), prueba, Toast.LENGTH_LONG).show();
+//            System.out.print(prueba);
 
-            //hasta aquí me quedé, continuar desde este punto!!!!
-            //            for (int i = 0; i < jsonLists.length(); i++) {
-//                JSONObject jsonInfo = jsonLists.optJSONObject(i);
-//
-//                String sales = jsonInfo.optString("sales");
-//                Integer orders = jsonInfo.optInt("orders");
-//                Integer items = jsonInfo.optInt("items");
-//                Integer customers = jsonInfo.optInt("customers");
-//
-//                lSales.add(sales);
-//                lOrders.add(orders);
-//                lItems.add(items);
-//                lCustumers.add(customers);
-//            }
+            rItems.add(new Report(total_sales, average_sales, total_orders, total_items, total_tax));
 
-//            rItems.add(new Report(
-//                    total_sales, average_sales, total_orders, total_items, total_tax, lSales, lOrders, lItems, lCustumers
-//            ));
-//
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this); //recibe el contexto de la app
-//            LinearLayout layout1 = new LinearLayout(this); //para colocar en él los elementos
-//            layout1.setOrientation(LinearLayout.VERTICAL);
-//
-//            //nuevo listview en conjunto con un arrayadapter
-//            ListView vReports = new ListView(this);
-//            vReports.setAdapter(new ReportAdapter(this, rItems));
-//
-//            //boton
-//            btnRegresa = new Button(this);
-//            btnRegresa.setText("Cerrar");
-//            btnRegresa.setOnClickListener(this);
-//
-//            //se pasan los elementos al layout
-//            layout1.addView(vReports);
-//            layout1.addView(btnRegresa);
-//
-//            builder.setView(layout1); //se le pasa el layout a builder
-//            dialogFoto = builder.create(); //se termina de crear el dialogo
-//            dialogFoto.show(); //se muestra el dialogo
+            AlertDialog.Builder builder = new AlertDialog.Builder(this); //recibe el contexto de la app
+            LinearLayout layout1 = new LinearLayout(this); //para colocar en él los elementos
+            layout1.setOrientation(LinearLayout.VERTICAL);
+
+            //nuevo listview en conjunto con un arrayadapter
+            ListView vReports = new ListView(this);
+            vReports.setAdapter(new ReportAdapter(this, rItems));
+
+            //boton
+            btnRegresa = new Button(this);
+            btnRegresa.setText("Cerrar");
+            btnRegresa.setOnClickListener(this);
+
+            //se pasan los elementos al layout
+            layout1.addView(vReports);
+            layout1.addView(btnRegresa);
+
+            builder.setView(layout1); //se le pasa el layout a builder
+            dialogFoto = builder.create(); //se termina de crear el dialogo
+            dialogFoto.show(); //se muestra el dialogo
 
         } catch (JSONException e) {
             e.printStackTrace();

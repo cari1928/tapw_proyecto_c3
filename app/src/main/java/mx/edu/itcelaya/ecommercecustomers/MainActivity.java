@@ -121,8 +121,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Intent iReport = new Intent(MainActivity.this, ReportActivity.class);
                     startActivity(iReport);
                     break;
-                case 5:
-                    //desloguear
+                case 5: //desloguear
+                    logout();
                     break;
                 default:
                     bandera = super.onOptionsItemSelected(item);
@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(iOrders);
                     break;
                 case 4: //desloguear
+                    logout();
                     break;
                 default:
                     bandera = super.onOptionsItemSelected(item);
@@ -161,11 +162,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
 
                 case 4: //desloguear
+                    logout();
                     break;
             }
             bandera = super.onOptionsItemSelected(item);
         }
         return bandera;
+    }
+
+    private  void logout(){
+        role = "";
+        isChangedStat = 0;
+        TextView tvNombre = (TextView) findViewById(R.id.user);
+        tvNombre.setText("");
+        onRestart();
     }
 
     private void newOrder(int customerID) {
@@ -279,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 deleteCustomer(customer.getId());
                 break;
 
-            case R.id.mnuDetail:
+            case R.id.mnuDetail: //pedidos
                 Intent iOrders = new Intent(this, CustomerOrdersActivity.class);
                 iOrders.putExtra("idCustomer", customer.getId());
                 startActivity(iOrders);

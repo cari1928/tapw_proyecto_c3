@@ -76,10 +76,6 @@ public class OrderStatusActivity extends AppCompatActivity implements View.OnCli
         url = "https://tapw-proyecto-c3-cari1928.c9users.io/wc-api/v3/orders/statuses";
         type = "status";
         loadElements(url);
-
-//        ArrayAdapter<String> adapter_sp = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, a_status);
-//        sp_status.setAdapter(adapter_sp);
-//        sp_status.setOnItemSelectedListener(this);
     }
 
     private void loadElements(String p_url) {
@@ -150,7 +146,6 @@ public class OrderStatusActivity extends AppCompatActivity implements View.OnCli
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Error" + e.toString(), Toast.LENGTH_LONG).show();
-
         }
     }
 
@@ -183,16 +178,38 @@ public class OrderStatusActivity extends AppCompatActivity implements View.OnCli
                     String email = jsonResponsePersonal.optString("email");
                     String nombre = first_name + " " + last_name;
 
-                    String jsonProduct = jsonChildNode.optString("line_items");
-                    JSONArray jsonMainNode2 = jsonChildNode.optJSONArray("line_items");
-                    for (int j = 0; j < jsonMainNode2.length(); j++) {
-                        JSONObject p = jsonMainNode2.getJSONObject(j);
-                        Integer product_id = p.optInt("product_id");
-                        //Toast.makeText(getApplicationContext(), "Productos: " + p.optInt("product_id"), Toast.LENGTH_LONG).show();
-                        products_id.add(product_id);
+//                    String jsonProduct = jsonChildNode.optString("line_items");
+//                    JSONArray jsonMainNode2 = jsonChildNode.optJSONArray(jsonProduct);
+//                    for (int j = 0; j < jsonMainNode2.length(); j++) {
+//                        JSONObject p = jsonMainNode2.getJSONObject(j);
+//                        Integer product_id = p.optInt("product_id");
+//                        //Toast.makeText(getApplicationContext(), "Productos: " + p.optInt("product_id"), Toast.LENGTH_LONG).show();
+//                        products_id.add(product_id);
+//                    }
+
+                    JSONArray jsonProductsNode = jsonChildNode.optJSONArray("line_items");
+
+                    String sProducts = "";
+                    List<Product> products = new ArrayList<Product>();
+                    for (int x = 0; x < jsonProductsNode.length(); x++) {
+                        JSONObject jsonChildNodeProduct = jsonProductsNode.getJSONObject(x);
+                        //sProducts += jsonChildNodeProduct.optString("product_id") + ",";
+                        products.add(new Product(
+                                jsonChildNodeProduct.optInt("product_id"),
+                                jsonChildNodeProduct.optString("name"),
+                                jsonChildNodeProduct.optDouble("price"),
+                                jsonChildNodeProduct.optInt("quantity")
+                        ));
                     }
 
-                    items.add(new Order(order_number, created_at, total_line_items_quantity, nombre, email, products_id));
+                    //items.add(new Order(order_number, created_at, total_line_items_quantity, nombre, email, products_id));
+                    items.add(new Order(
+                            jsonChildNode.optInt("id"),
+                            jsonChildNode.optInt("order_number"),
+                            jsonChildNode.optString("status"),
+                            jsonChildNode.optDouble("total"),
+                            products
+                    ));
                 }
             }
         } catch (JSONException e) {
@@ -200,7 +217,7 @@ public class OrderStatusActivity extends AppCompatActivity implements View.OnCli
             Toast.makeText(getApplicationContext(), "Error" + e.toString(), Toast.LENGTH_LONG).show();
 
         }
-        listOrders.setAdapter(new OrdersAdapter(this, items));
+        listOrders.setAdapter(new OrderAdapter(this, items));
     }
 
     public void ListStatus() {
@@ -260,7 +277,7 @@ public class OrderStatusActivity extends AppCompatActivity implements View.OnCli
                     statusSelected = "pending";
                     break;
 
-                case 3: //pending payment
+                case 3: //On Hold
                     statusSelected = "on-hold";
                     break;
             }

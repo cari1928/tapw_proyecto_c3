@@ -67,10 +67,6 @@ public class ReportAdapter extends BaseAdapter {
         TextView tvTotalOrders  = (TextView) rowView.findViewById(R.id.tvTotalOrders);
         TextView tvTotalProducts  = (TextView) rowView.findViewById(R.id.tvTotalProducts);
         TextView tvTotalTax  = (TextView) rowView.findViewById(R.id.tvTotalTax);
-        ListView lvSubtotal = (ListView) rowView.findViewById(R.id.lvSubtotal);
-//        ListView lvOrdenes = (ListView) rowView.findViewById(R.id.lvOrdenes);
-//        ListView lvProducts = (ListView) rowView.findViewById(R.id.lvProducts);
-//        ListView lvCustomers = (ListView) rowView.findViewById(R.id.lvCustomers);
 
         final Report item = this.reports.get(position);
 
@@ -79,23 +75,6 @@ public class ReportAdapter extends BaseAdapter {
         tvTotalOrders.setText(item.getTotal_orders() + "");
         tvTotalProducts.setText(item.getTotal_items() + "");
         tvTotalTax.setText(item.getTotal_tax());
-
-        List<String> lSales = item.getSales();
-
-        //falta checar éstos
-//        List<Integer> lOrders = item.getOrders();
-//        List<Integer> lItems = item.getItems();
-//        List<Integer> lCustumers = item.getCostumers();
-
-        final ArrayList<String> list = new ArrayList<String>();
-        for (Iterator<String> iter = lSales.iterator(); iter.hasNext(); ) {
-            String element = iter.next();
-            list.add(element);
-        }
-
-        final ArrayAdapter adapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, list);
-        lvSubtotal.setAdapter(adapter);
-        rowView.setTag("Prueba");
 
         return rowView;
     }
