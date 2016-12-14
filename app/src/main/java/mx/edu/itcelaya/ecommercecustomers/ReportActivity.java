@@ -27,8 +27,9 @@ import mx.edu.itcelaya.ecommercecustomers.task.WooCommerceTask;
 
 public class ReportActivity extends AppCompatActivity implements View.OnClickListener {
 
-    String optTime[] = {"Day", "Week", "Month", "Last Month", "Year"};
-    String optInformation[] = {"Subtotals", "Orders", "Products", "Customers"};
+    //String optTime[] = {"Day", "Week", "Month", "Last Month", "Year"};
+    String optTime[] = {"Week", "Month", "Last Month", "Year"};
+    //String optInformation[] = {"Subtotals", "Orders", "Products", "Customers"};
     String optGraph[] = {"BarChart", "PieChart"};
 
     String jsonResult;
@@ -37,8 +38,8 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
 
     //-----------------------Componentes---------------------------
     Menu menu;
-    EditText txtCode, txtAmount, txtMinAmount;
-    Spinner spTime, spInformation, spGraph;
+    Spinner spTime, spGraph;
+    //Spinner spInformation;
     Button btnGraph, btnReport;
     AlertDialog dialogFoto;
     Button btnRegresa;
@@ -60,16 +61,16 @@ public class ReportActivity extends AppCompatActivity implements View.OnClickLis
 
     private void createSpinners() {
         spTime = (Spinner) findViewById(R.id.spTime);
-        spInformation = (Spinner) findViewById(R.id.spInformation);
+        //spInformation = (Spinner) findViewById(R.id.spInformation);
         spGraph = (Spinner) findViewById(R.id.spGraph);
 
         ArrayAdapter<String> adapterType = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, optTime);
-        ArrayAdapter<String> adapterIndividualUse = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, optInformation);
+        //ArrayAdapter<String> adapterIndividualUse = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, optInformation);
         ArrayAdapter<String> adapterGraph = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, optGraph);
 
         //set adapters
         spTime.setAdapter(adapterType);
-        spInformation.setAdapter(adapterIndividualUse);
+        //spInformation.setAdapter(adapterIndividualUse);
         spGraph.setAdapter(adapterGraph);
     }
 
